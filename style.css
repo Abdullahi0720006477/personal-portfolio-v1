@@ -1,0 +1,123 @@
+/* Base Layers */
+@layer base {
+    html {
+        scroll-behavior: smooth;
+    }
+
+    body {
+        @apply antialiased;
+        background-color: #0b0b0e;
+    }
+}
+
+/* Custom Design Tokens */
+:root {
+    --primary: #39FF14;
+    --primary-glow: rgba(57, 255, 20, 0.4);
+}
+
+/* Hero Overlay & Gradients */
+.hero-overlay {
+    background: linear-gradient(to bottom, rgba(11, 11, 14, 0.4) 0%, rgba(11, 11, 14, 0.95) 100%);
+}
+
+.glow-text {
+    text-shadow: 0 0 30px rgba(57, 255, 20, 0.2);
+}
+
+/* Glassmorphism Classes */
+.glass-panel {
+    background: rgba(11, 11, 14, 0.7);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.glass-card-light {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.glass-card-light:hover {
+    transform: translateY(-8px) scale(1.01);
+    box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.15);
+}
+
+/* Animations */
+@keyframes slow-zoom {
+    from {
+        transform: scale(1.05);
+    }
+
+    to {
+        transform: scale(1.15);
+    }
+}
+
+@keyframes slow-spin {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes float {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-20px);
+    }
+}
+
+.animate-slow-zoom {
+    animation: slow-zoom 20s infinite alternate ease-in-out;
+}
+
+.animate-slow-spin {
+    animation: slow-spin 30s linear infinite;
+}
+
+.animate-float {
+    animation: float 6s ease-in-out infinite;
+}
+
+/* Reveal Animation System */
+.reveal {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: all 1s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.reveal.active {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Image Hover & Quality */
+img {
+    image-rendering: -webkit-optimize-contrast;
+}
+
+.project-card img {
+    filter: saturate(1.1) contrast(1.05);
+}
+
+/* Selection */
+::selection {
+    background: var(--primary);
+    color: #000;
+}
+
+/* Smooth Scroll Padding */
+section {
+    scroll-margin-top: 80px;
+}
