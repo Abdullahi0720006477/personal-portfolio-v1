@@ -69,6 +69,7 @@
         }
         .cursor      { width:10px; height:10px; background:var(--primary); }
         .cursor-ring { width:32px; height:32px; border:1.5px solid var(--primary); opacity:0.5; transition: transform 0.15s ease, width 0.3s, height 0.3s; }
+        /* Disable cursor on touch devices */
         @media (pointer:coarse){ .cursor,.cursor-ring{ display:none } body{ cursor:auto } }
 
         /* ── Glass ── */
@@ -131,7 +132,7 @@
         .nav-link:hover::after { width:100%; }
 
         /* ── Theme toggle ── */
-        .theme-btn { width:48px; height:26px; border-radius:99px; background:var(--border); position:relative; cursor:pointer; transition:background 0.3s; border: 1px solid var(--border); }
+        .theme-btn { width:48px; height:26px; border-radius:99px; background:var(--border); position:relative; cursor:pointer; transition:background 0.3s; border: 1px solid var(--border); flex-shrink:0; }
         .theme-btn::after { content:''; position:absolute; top:3px; left:3px; width:18px; height:18px; border-radius:50%; background:var(--primary); transition:transform 0.3s; }
         html.light .theme-btn::after { transform:translateX(22px); }
 
@@ -148,9 +149,9 @@
         html.light .screenshot { box-shadow:0 8px 32px rgba(139,92,246,0.12); }
 
         /* ── Btn ── */
-        .btn-primary { background:var(--primary); color:#fff; font-weight:800; font-size:11px; text-transform:uppercase; letter-spacing:.15em; border-radius:14px; padding:14px 28px; display:inline-flex; align-items:center; gap:8px; transition:all 0.3s; box-shadow:0 0 28px rgba(139,92,246,0.35); }
+        .btn-primary { background:var(--primary); color:#fff; font-weight:800; font-size:11px; text-transform:uppercase; letter-spacing:.15em; border-radius:14px; padding:14px 28px; display:inline-flex; align-items:center; justify-content:center; gap:8px; transition:all 0.3s; box-shadow:0 0 28px rgba(139,92,246,0.35); }
         .btn-primary:hover { transform:scale(1.03); box-shadow:0 0 48px rgba(139,92,246,0.55); }
-        .btn-ghost { background:var(--card-bg); border:1px solid var(--border); color:var(--text); font-weight:800; font-size:11px; text-transform:uppercase; letter-spacing:.15em; border-radius:14px; padding:14px 28px; display:inline-flex; align-items:center; gap:8px; transition:all 0.3s; backdrop-filter:blur(10px); }
+        .btn-ghost { background:var(--card-bg); border:1px solid var(--border); color:var(--text); font-weight:800; font-size:11px; text-transform:uppercase; letter-spacing:.15em; border-radius:14px; padding:14px 28px; display:inline-flex; align-items:center; justify-content:center; gap:8px; transition:all 0.3s; backdrop-filter:blur(10px); }
         .btn-ghost:hover { border-color:var(--primary); transform:scale(1.02); }
 
         /* ── Section label ── */
@@ -172,6 +173,64 @@
 
         /* ── Tag ── */
         .tag { font-size:9px; font-weight:700; text-transform:uppercase; letter-spacing:.12em; padding:4px 10px; border-radius:6px; background:var(--card-bg); border:1px solid var(--border); color:var(--muted); }
+
+        /* ── Mobile-specific: hero profile image ── */
+        /* circular on mobile, rounded-rect on desktop */
+        .hero-profile-img {
+            border-radius: 50%;
+            overflow: hidden;
+        }
+        @media (min-width: 768px) {
+            .hero-profile-img {
+                border-radius: 28px;
+            }
+        }
+
+        /* ── Prevent overflow on mobile ── */
+        .hero-profile-wrapper {
+            width: 180px;
+            height: 180px;
+            flex-shrink: 0;
+        }
+        @media (min-width: 768px) {
+            .hero-profile-wrapper {
+                width: 100%;
+                height: auto;
+                max-width: 380px;
+            }
+        }
+
+        /* ── Stats border fix on mobile (2x2 grid) ── */
+        @media (max-width: 639px) {
+            .stat-border { border-left: none !important; }
+            .stat-border-mobile { border-top: 1px solid var(--border); }
+        }
+
+        /* ── Section spacing — reduce on mobile ── */
+        .section-py { padding-top: 4rem; padding-bottom: 4rem; }
+        @media (min-width: 768px) {
+            .section-py { padding-top: 7rem; padding-bottom: 7rem; }
+        }
+
+        /* ── Section horizontal padding ── */
+        .section-px { padding-left: 1rem; padding-right: 1rem; }
+        @media (min-width: 640px) {
+            .section-px { padding-left: 1.5rem; padding-right: 1.5rem; }
+        }
+        @media (min-width: 1024px) {
+            .section-px { padding-left: 1.5rem; padding-right: 1.5rem; }
+        }
+
+        /* ── Section heading responsive ── */
+        .section-heading { font-size: 1.875rem; } /* text-3xl */
+        @media (min-width: 768px) {
+            .section-heading { font-size: 2.25rem; } /* text-4xl */
+        }
+
+        /* ── Mobile full-width buttons ── */
+        @media (max-width: 639px) {
+            .btn-stack-mobile { width: 100%; }
+        }
     </style>
 </head>
 <body>
@@ -185,23 +244,23 @@
 
     <!-- ═══════════════════════ NAVBAR ═══════════════════════ -->
     <nav id="navbar" class="fixed top-0 w-full z-50 glass border-b" style="border-color:var(--border)">
-        <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-            <!-- Logo -->
-            <a href="#" class="flex items-center gap-2.5">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
+            <!-- Logo — always visible -->
+            <a href="#" class="flex items-center gap-2.5 flex-shrink-0">
                 <div class="w-9 h-9 rounded-full overflow-hidden" style="border:2px solid var(--primary)">
                     <img src="assets/profile.jpg" class="w-full h-full object-cover" alt="Abdullahidev"/>
                 </div>
-                <span class="font-black text-base hidden sm:block" style="color:var(--text)">Abdullahi<span style="color:var(--primary)">dev</span></span>
+                <span class="font-black text-base" style="color:var(--text)">Abdullahi<span style="color:var(--primary)">dev</span></span>
             </a>
 
-            <!-- Desktop links -->
+            <!-- Desktop links — hidden on mobile -->
             <div class="hidden md:flex items-center gap-7">
-                <a href="#about"   class="nav-link">About</a>
-                <a href="#skills"  class="nav-link">Skills</a>
+                <a href="#about"    class="nav-link">About</a>
+                <a href="#skills"   class="nav-link">Skills</a>
                 <a href="#services" class="nav-link">Services</a>
-                <a href="#work"    class="nav-link">Work</a>
-                <a href="#journey" class="nav-link">Journey</a>
-                <a href="#contact" class="nav-link">Contact</a>
+                <a href="#work"     class="nav-link">Work</a>
+                <a href="#journey"  class="nav-link">Journey</a>
+                <a href="#contact"  class="nav-link">Contact</a>
             </div>
 
             <div class="flex items-center gap-3">
@@ -211,6 +270,7 @@
                 <a href="#contact" class="btn-primary hidden md:inline-flex">
                     Let's Talk <i class="fa-solid fa-arrow-right text-xs"></i>
                 </a>
+                <!-- Hamburger — visible on mobile -->
                 <button onclick="toggleMob()" id="mob-btn" class="md:hidden glass rounded-xl p-2.5" style="color:var(--text)">
                     <i class="fa-solid fa-bars" id="mob-icon"></i>
                 </button>
@@ -218,114 +278,131 @@
         </div>
     </nav>
 
-    <!-- Mobile menu -->
-    <div id="mob-menu" class="fixed top-0 right-0 h-full w-72 z-50 glass border-l flex flex-col p-8 pt-24" style="border-color:var(--border)">
+    <!-- Mobile menu — slides in from right, full-width on xs -->
+    <div id="mob-menu" class="fixed top-0 right-0 h-full w-full xs:w-72 sm:w-80 z-50 glass border-l flex flex-col p-8 pt-24" style="border-color:var(--border)">
         <button onclick="toggleMob()" class="absolute top-5 right-5" style="color:var(--muted)"><i class="fa-solid fa-xmark text-xl"></i></button>
         <div class="flex flex-col gap-5">
-            <a href="#about"   onclick="toggleMob()" class="text-base font-bold" style="color:var(--text)"><i class="fa-solid fa-user w-5 mr-2" style="color:var(--primary)"></i>About</a>
-            <a href="#skills"  onclick="toggleMob()" class="text-base font-bold" style="color:var(--text)"><i class="fa-solid fa-chart-bar w-5 mr-2" style="color:var(--primary)"></i>Skills</a>
+            <a href="#about"    onclick="toggleMob()" class="text-base font-bold" style="color:var(--text)"><i class="fa-solid fa-user w-5 mr-2" style="color:var(--primary)"></i>About</a>
+            <a href="#skills"   onclick="toggleMob()" class="text-base font-bold" style="color:var(--text)"><i class="fa-solid fa-chart-bar w-5 mr-2" style="color:var(--primary)"></i>Skills</a>
             <a href="#services" onclick="toggleMob()" class="text-base font-bold" style="color:var(--text)"><i class="fa-solid fa-briefcase w-5 mr-2" style="color:var(--primary)"></i>Services</a>
-            <a href="#work"    onclick="toggleMob()" class="text-base font-bold" style="color:var(--text)"><i class="fa-solid fa-code w-5 mr-2" style="color:var(--primary)"></i>Work</a>
-            <a href="#journey" onclick="toggleMob()" class="text-base font-bold" style="color:var(--text)"><i class="fa-solid fa-timeline w-5 mr-2" style="color:var(--primary)"></i>Journey</a>
-            <a href="#contact" onclick="toggleMob()" class="text-base font-bold" style="color:var(--text)"><i class="fa-solid fa-envelope w-5 mr-2" style="color:var(--primary)"></i>Contact</a>
+            <a href="#work"     onclick="toggleMob()" class="text-base font-bold" style="color:var(--text)"><i class="fa-solid fa-code w-5 mr-2" style="color:var(--primary)"></i>Work</a>
+            <a href="#journey"  onclick="toggleMob()" class="text-base font-bold" style="color:var(--text)"><i class="fa-solid fa-timeline w-5 mr-2" style="color:var(--primary)"></i>Journey</a>
+            <a href="#contact"  onclick="toggleMob()" class="text-base font-bold" style="color:var(--text)"><i class="fa-solid fa-envelope w-5 mr-2" style="color:var(--primary)"></i>Contact</a>
         </div>
-        <div class="mt-auto"><a href="#contact" onclick="toggleMob()" class="btn-primary w-full justify-center">Let's Talk <i class="fa-solid fa-arrow-right text-xs"></i></a></div>
+        <div class="mt-auto">
+            <a href="#contact" onclick="toggleMob()" class="btn-primary w-full">Let's Talk <i class="fa-solid fa-arrow-right text-xs"></i></a>
+        </div>
     </div>
     <div id="mob-overlay" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 hidden" onclick="toggleMob()"></div>
 
     <!-- ═══════════════════════ HERO ═══════════════════════ -->
-    <header class="relative min-h-screen flex items-center px-6 pt-20 overflow-hidden">
+    <header class="relative min-h-screen flex items-center section-px pt-20 overflow-hidden">
         <div class="absolute inset-0 grid-bg opacity-20 z-0"></div>
 
-        <div class="max-w-7xl mx-auto w-full relative z-10 grid lg:grid-cols-2 gap-14 items-center">
-            <!-- Left -->
-            <div>
-                <!-- Badge -->
-                <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full glass mb-8 reveal" style="border:1px solid rgba(34,197,94,0.25)">
-                    <span class="relative flex h-2.5 w-2.5">
-                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-                        <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-green-500"></span>
-                    </span>
-                    <span style="font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:.18em;color:#4ade80">Available for Projects</span>
-                </div>
+        <div class="max-w-7xl mx-auto w-full relative z-10">
+            <!-- Mobile: stack vertically; Desktop: side-by-side grid -->
+            <div class="flex flex-col items-center text-center md:text-left md:grid md:grid-cols-2 md:gap-14 md:items-center">
 
-                <h1 class="font-display font-black leading-[1.05] tracking-tight mb-6 reveal d1" style="font-size:clamp(2.8rem,6vw,5rem)">
-                    <span class="grad-white">Building</span><br/>
-                    <span style="color:var(--text)">Enterprise</span><br/>
-                    <span id="typed" style="color:var(--primary)">Systems</span>
-                </h1>
+                <!-- Left: text content -->
+                <div class="w-full">
+                    <!-- Badge -->
+                    <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full glass mb-6 reveal" style="border:1px solid rgba(34,197,94,0.25)">
+                        <span class="relative flex h-2.5 w-2.5">
+                            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                            <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-green-500"></span>
+                        </span>
+                        <span style="font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:.18em;color:#4ade80">Available for Projects</span>
+                    </div>
 
-                <p class="text-lg leading-relaxed font-light mb-10 reveal d2" style="color:var(--muted); max-width:480px; border-left:3px solid var(--primary); padding-left:18px">
-                    Senior Systems Architect & SaaS Product Engineer crafting
-                    <strong style="color:var(--text)">scalable enterprise platforms</strong> — from property management to POS and e-commerce.
-                </p>
+                    <h1 class="font-display font-black leading-[1.05] tracking-tight mb-6 reveal d1" style="font-size:clamp(2.2rem,7vw,5rem)">
+                        <span class="grad-white">Building</span><br/>
+                        <span style="color:var(--text)">Enterprise</span><br/>
+                        <span id="typed" style="color:var(--primary)">Systems</span>
+                    </h1>
 
-                <div class="flex flex-wrap gap-4 mb-10 reveal d3">
-                    <a href="#work" class="btn-primary">
-                        <i class="fa-solid fa-eye"></i> View My Work
-                    </a>
-                    <a href="#contact" class="btn-ghost">
-                        <i class="fa-solid fa-paper-plane"></i> Let's Talk
-                    </a>
-                </div>
+                    <p class="text-base sm:text-lg leading-relaxed font-light mb-8 reveal d2 mx-auto md:mx-0" style="color:var(--muted); max-width:480px; border-left:3px solid var(--primary); padding-left:18px; text-align:left">
+                        Senior Systems Architect &amp; SaaS Product Engineer crafting
+                        <strong style="color:var(--text)">scalable enterprise platforms</strong> — from property management to POS and e-commerce.
+                    </p>
 
-                <!-- Stack pills -->
-                <div class="reveal d4">
-                    <p style="font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:.25em;color:var(--muted);margin-bottom:10px">Core Stack</p>
-                    <div class="flex flex-wrap gap-2">
-                        <span class="tag"><i class="fa-brands fa-php mr-1"></i>PHP</span>
-                        <span class="tag"><i class="fa-brands fa-js mr-1"></i>TypeScript</span>
-                        <span class="tag"><i class="fa-solid fa-database mr-1"></i>MySQL</span>
-                        <span class="tag"><i class="fa-brands fa-react mr-1"></i>React</span>
-                        <span class="tag"><i class="fa-brands fa-laravel mr-1"></i>Laravel</span>
-                        <span class="tag"><i class="fa-brands fa-github mr-1"></i>CI/CD</span>
-                        <span class="tag"><i class="fa-brands fa-docker mr-1"></i>Docker</span>
+                    <!-- Buttons: full-width stacked on mobile, inline on sm+ -->
+                    <div class="flex flex-col sm:flex-row gap-3 sm:gap-4 mb-8 reveal d3 w-full sm:w-auto">
+                        <a href="#work" class="btn-primary btn-stack-mobile">
+                            <i class="fa-solid fa-eye"></i> View My Work
+                        </a>
+                        <a href="#contact" class="btn-ghost btn-stack-mobile">
+                            <i class="fa-solid fa-paper-plane"></i> Let's Talk
+                        </a>
+                    </div>
+
+                    <!-- Stack pills -->
+                    <div class="reveal d4 text-left">
+                        <p style="font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:.25em;color:var(--muted);margin-bottom:10px">Core Stack</p>
+                        <div class="flex flex-wrap gap-2 justify-start">
+                            <span class="tag"><i class="fa-brands fa-php mr-1"></i>PHP</span>
+                            <span class="tag"><i class="fa-brands fa-js mr-1"></i>TypeScript</span>
+                            <span class="tag"><i class="fa-solid fa-database mr-1"></i>MySQL</span>
+                            <span class="tag"><i class="fa-brands fa-react mr-1"></i>React</span>
+                            <span class="tag"><i class="fa-brands fa-laravel mr-1"></i>Laravel</span>
+                            <span class="tag"><i class="fa-brands fa-github mr-1"></i>CI/CD</span>
+                            <span class="tag"><i class="fa-brands fa-docker mr-1"></i>Docker</span>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <!-- Right: profile + floating cards -->
-            <div class="relative flex justify-center reveal d2">
-                <div class="relative w-full max-w-[380px]">
-                    <!-- Main photo -->
-                    <div class="screenshot aspect-[3/4] relative group overflow-hidden rounded-[28px]" style="border:1px solid var(--border)">
-                        <img src="assets/profile.jpg" class="proj-img w-full h-full object-cover" alt="Abdullahidev"/>
-                        <div class="absolute inset-0" style="background:linear-gradient(to top, var(--bg) 0%, transparent 55%)"></div>
-                        <div class="absolute bottom-5 left-5 right-5">
-                            <p class="font-black text-xl" style="color:var(--text)">Abdullahi Mukhtar</p>
-                            <p style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.15em;color:var(--primary)">Senior Systems Architect</p>
+                <!-- Right: profile image + floating cards -->
+                <!-- On mobile: circular image, no floating cards; On md+: rounded-rect + floating cards visible -->
+                <div class="relative flex justify-center reveal d2 mt-10 md:mt-0 w-full">
+
+                    <!-- Mobile: circular profile image -->
+                    <div class="md:hidden flex justify-center">
+                        <div class="w-40 h-40 rounded-full overflow-hidden" style="border:3px solid var(--primary);box-shadow:0 0 32px rgba(139,92,246,0.35)">
+                            <img src="assets/profile.jpg" class="w-full h-full object-cover" alt="Abdullahidev"/>
                         </div>
                     </div>
 
-                    <!-- Floating: projects -->
-                    <div class="float absolute -right-8 top-10 glass rounded-2xl p-4" style="border:1px solid var(--border)">
-                        <p class="font-black text-2xl" style="color:var(--text)">50+</p>
-                        <p style="font-size:9px;font-weight:900;text-transform:uppercase;letter-spacing:.15em;color:var(--primary)"><i class="fa-solid fa-rocket mr-1"></i>Projects</p>
-                    </div>
-                    <!-- Floating: CI/CD -->
-                    <div class="float absolute -left-8 bottom-28 glass rounded-2xl p-4" style="border:1px solid var(--border);animation-delay:-2.5s">
-                        <div class="flex items-center gap-2.5">
-                            <div class="w-9 h-9 rounded-xl flex items-center justify-center" style="background:rgba(139,92,246,.15);border:1px solid rgba(139,92,246,.3)">
-                                <i class="fa-brands fa-github" style="color:var(--primary)"></i>
-                            </div>
-                            <div>
-                                <p class="font-black text-sm" style="color:var(--text)">CI/CD</p>
-                                <p style="font-size:8px;font-weight:700;text-transform:uppercase;color:var(--muted)">All Repos</p>
+                    <!-- Desktop: rounded-rect profile + floating stat cards -->
+                    <div class="hidden md:block relative w-full max-w-[380px]">
+                        <!-- Main photo: rounded rectangle on desktop -->
+                        <div class="screenshot aspect-[3/4] relative group overflow-hidden" style="border-radius:28px;border:1px solid var(--border)">
+                            <img src="assets/profile.jpg" class="proj-img w-full h-full object-cover" alt="Abdullahidev"/>
+                            <div class="absolute inset-0" style="background:linear-gradient(to top, var(--bg) 0%, transparent 55%)"></div>
+                            <div class="absolute bottom-5 left-5 right-5">
+                                <p class="font-black text-xl" style="color:var(--text)">Abdullahi Mukhtar</p>
+                                <p style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.15em;color:var(--primary)">Senior Systems Architect</p>
                             </div>
                         </div>
-                    </div>
-                    <!-- Floating: open -->
-                    <div class="float absolute -right-4 bottom-10 glass rounded-xl p-3" style="border:1px solid rgba(34,197,94,.2);animation-delay:-4s">
-                        <div class="flex items-center gap-2">
-                            <span class="relative flex h-2 w-2"><span class="animate-ping absolute h-full w-full rounded-full bg-green-400 opacity-75"></span><span class="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span></span>
-                            <span style="font-size:9px;font-weight:900;text-transform:uppercase;letter-spacing:.15em;color:#4ade80">Open to Work</span>
+
+                        <!-- Floating: projects count -->
+                        <div class="float absolute -right-8 top-10 glass rounded-2xl p-4" style="border:1px solid var(--border)">
+                            <p class="font-black text-2xl" style="color:var(--text)">50+</p>
+                            <p style="font-size:9px;font-weight:900;text-transform:uppercase;letter-spacing:.15em;color:var(--primary)"><i class="fa-solid fa-rocket mr-1"></i>Projects</p>
+                        </div>
+                        <!-- Floating: CI/CD -->
+                        <div class="float absolute -left-8 bottom-28 glass rounded-2xl p-4" style="border:1px solid var(--border);animation-delay:-2.5s">
+                            <div class="flex items-center gap-2.5">
+                                <div class="w-9 h-9 rounded-xl flex items-center justify-center" style="background:rgba(139,92,246,.15);border:1px solid rgba(139,92,246,.3)">
+                                    <i class="fa-brands fa-github" style="color:var(--primary)"></i>
+                                </div>
+                                <div>
+                                    <p class="font-black text-sm" style="color:var(--text)">CI/CD</p>
+                                    <p style="font-size:8px;font-weight:700;text-transform:uppercase;color:var(--muted)">All Repos</p>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Floating: open to work -->
+                        <div class="float absolute -right-4 bottom-10 glass rounded-xl p-3" style="border:1px solid rgba(34,197,94,.2);animation-delay:-4s">
+                            <div class="flex items-center gap-2">
+                                <span class="relative flex h-2 w-2"><span class="animate-ping absolute h-full w-full rounded-full bg-green-400 opacity-75"></span><span class="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span></span>
+                                <span style="font-size:9px;font-weight:900;text-transform:uppercase;letter-spacing:.15em;color:#4ade80">Open to Work</span>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Scroll down -->
+        <!-- Scroll down indicator -->
         <div class="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 cursor-pointer opacity-40 hover:opacity-90 transition-opacity" onclick="document.getElementById('about').scrollIntoView({behavior:'smooth'})">
             <span style="font-size:9px;font-weight:900;text-transform:uppercase;letter-spacing:.4em;color:var(--muted)">Scroll</span>
             <div style="width:1px;height:40px;background:linear-gradient(to bottom, var(--primary), transparent)"></div>
@@ -333,19 +410,20 @@
     </header>
 
     <!-- ═══════════════════════ ABOUT ═══════════════════════ -->
-    <section id="about" class="py-28 px-6">
+    <section id="about" class="section-py section-px">
         <div class="max-w-7xl mx-auto">
-            <div class="reveal mb-14">
+            <div class="reveal mb-10 md:mb-14">
                 <p class="section-label mb-2"><i class="fa-solid fa-user mr-2"></i>01 — About</p>
-                <h2 class="font-display font-black text-4xl" style="color:var(--text)">Who I Am</h2>
+                <h2 class="font-display font-black section-heading" style="color:var(--text)">Who I Am</h2>
                 <div style="height:3px;width:48px;background:linear-gradient(90deg,var(--primary),var(--cyan));border-radius:99px;margin-top:8px"></div>
             </div>
 
-            <div class="grid md:grid-cols-3 gap-6">
+            <!-- 1 col on mobile, 3 col on md -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <!-- Story -->
-                <div class="glass card-hover rounded-3xl p-8 md:col-span-2 reveal" style="border:1px solid var(--border)">
+                <div class="glass card-hover rounded-3xl p-6 md:p-8 md:col-span-2 reveal" style="border:1px solid var(--border)">
                     <div class="flex items-center gap-3 mb-6">
-                        <div class="w-11 h-11 rounded-2xl flex items-center justify-center" style="background:rgba(139,92,246,.12);border:1px solid rgba(139,92,246,.25)">
+                        <div class="w-11 h-11 rounded-2xl flex items-center justify-center flex-shrink-0" style="background:rgba(139,92,246,.12);border:1px solid rgba(139,92,246,.25)">
                             <i class="fa-solid fa-code" style="color:var(--primary)"></i>
                         </div>
                         <h3 class="font-black text-xl" style="color:var(--text)">My Story</h3>
@@ -365,10 +443,10 @@
                     </div>
                 </div>
 
-                <!-- Stack -->
-                <div class="glass card-hover rounded-3xl p-8 reveal d1" style="border:1px solid var(--border)">
+                <!-- Tech Stack -->
+                <div class="glass card-hover rounded-3xl p-6 md:p-8 reveal d1" style="border:1px solid var(--border)">
                     <div class="flex items-center gap-3 mb-6">
-                        <div class="w-11 h-11 rounded-2xl flex items-center justify-center" style="background:rgba(6,182,212,.1);border:1px solid rgba(6,182,212,.25)">
+                        <div class="w-11 h-11 rounded-2xl flex items-center justify-center flex-shrink-0" style="background:rgba(6,182,212,.1);border:1px solid rgba(6,182,212,.25)">
                             <i class="fa-solid fa-layer-group" style="color:var(--cyan)"></i>
                         </div>
                         <h3 class="font-black text-xl" style="color:var(--text)">Tech Stack</h3>
@@ -397,23 +475,23 @@
                     </div>
                 </div>
 
-                <!-- Stats -->
-                <div class="glass rounded-3xl p-8 md:col-span-3 reveal d2" style="border:1px solid var(--border)">
+                <!-- Stats: 2x2 on mobile, 4x1 on desktop -->
+                <div class="glass rounded-3xl p-6 md:p-8 md:col-span-3 reveal d2" style="border:1px solid var(--border)">
                     <div class="grid grid-cols-2 sm:grid-cols-4 gap-6 text-center">
                         <div>
-                            <p class="font-black" style="font-size:3rem;color:var(--text)" data-count="50" data-suffix="+">0+</p>
+                            <p class="font-black" style="font-size:2.5rem;color:var(--text)" data-count="50" data-suffix="+">0+</p>
                             <p style="font-size:9px;font-weight:900;text-transform:uppercase;letter-spacing:.18em;color:var(--muted)"><i class="fa-solid fa-rocket mr-1" style="color:var(--primary)"></i>Projects Built</p>
                         </div>
-                        <div style="border-left:1px solid var(--border)">
-                            <p class="font-black" style="font-size:3rem;color:var(--text)" data-count="8" data-suffix="+">0+</p>
+                        <div class="stat-border" style="border-left:1px solid var(--border)">
+                            <p class="font-black" style="font-size:2.5rem;color:var(--text)" data-count="8" data-suffix="+">0+</p>
                             <p style="font-size:9px;font-weight:900;text-transform:uppercase;letter-spacing:.18em;color:var(--muted)"><i class="fa-solid fa-calendar mr-1" style="color:var(--cyan)"></i>Years Experience</p>
                         </div>
-                        <div style="border-left:1px solid var(--border)">
-                            <p class="font-black" style="font-size:3rem;color:var(--text)" data-count="15" data-suffix="+">0+</p>
+                        <div class="stat-border stat-border-mobile" style="border-left:1px solid var(--border)">
+                            <p class="font-black" style="font-size:2.5rem;color:var(--text)" data-count="15" data-suffix="+">0+</p>
                             <p style="font-size:9px;font-weight:900;text-transform:uppercase;letter-spacing:.18em;color:var(--muted)"><i class="fa-solid fa-building mr-1" style="color:var(--primary)"></i>Enterprise Clients</p>
                         </div>
-                        <div style="border-left:1px solid var(--border)">
-                            <p class="font-black" style="font-size:3rem;color:var(--text)" data-count="99" data-suffix="%">0%</p>
+                        <div class="stat-border stat-border-mobile" style="border-left:1px solid var(--border)">
+                            <p class="font-black" style="font-size:2.5rem;color:var(--text)" data-count="99" data-suffix="%">0%</p>
                             <p style="font-size:9px;font-weight:900;text-transform:uppercase;letter-spacing:.18em;color:var(--muted)"><i class="fa-solid fa-shield mr-1" style="color:var(--cyan)"></i>Uptime Delivered</p>
                         </div>
                     </div>
@@ -423,17 +501,18 @@
     </section>
 
     <!-- ═══════════════════════ SKILLS ═══════════════════════ -->
-    <section id="skills" class="py-28 px-6 bg-black/10">
+    <section id="skills" class="section-py section-px bg-black/10">
         <div class="max-w-7xl mx-auto">
-            <div class="reveal mb-14">
+            <div class="reveal mb-10 md:mb-14">
                 <p class="section-label mb-2"><i class="fa-solid fa-chart-bar mr-2"></i>02 — Skills</p>
-                <h2 class="font-display font-black text-4xl" style="color:var(--text)">Technical Proficiency</h2>
+                <h2 class="font-display font-black section-heading" style="color:var(--text)">Technical Proficiency</h2>
                 <div style="height:3px;width:48px;background:linear-gradient(90deg,var(--primary),var(--cyan));border-radius:99px;margin-top:8px"></div>
             </div>
-            <div class="grid md:grid-cols-2 gap-8">
-                <div class="glass card-hover rounded-3xl p-8 reveal" style="border:1px solid var(--border)">
+            <!-- 1 col on mobile, 2 col on md -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="glass card-hover rounded-3xl p-6 md:p-8 reveal" style="border:1px solid var(--border)">
                     <h3 class="font-black text-lg mb-8 flex items-center gap-3" style="color:var(--text)">
-                        <span class="w-9 h-9 rounded-xl flex items-center justify-center" style="background:rgba(139,92,246,.12);border:1px solid rgba(139,92,246,.25)">
+                        <span class="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0" style="background:rgba(139,92,246,.12);border:1px solid rgba(139,92,246,.25)">
                             <i class="fa-solid fa-server" style="color:var(--primary);font-size:14px"></i>
                         </span>
                         Backend & Database
@@ -445,9 +524,9 @@
                         <div><div class="flex justify-between mb-1.5"><span class="text-sm font-bold" style="color:var(--text)"><i class="fa-solid fa-sitemap mr-2" style="color:var(--cyan)"></i>System Architecture</span><span class="text-sm font-black" style="color:var(--primary)">92%</span></div><div class="bar-track"><div class="bar-fill" data-w="92"></div></div></div>
                     </div>
                 </div>
-                <div class="glass card-hover rounded-3xl p-8 reveal d1" style="border:1px solid var(--border)">
+                <div class="glass card-hover rounded-3xl p-6 md:p-8 reveal d1" style="border:1px solid var(--border)">
                     <h3 class="font-black text-lg mb-8 flex items-center gap-3" style="color:var(--text)">
-                        <span class="w-9 h-9 rounded-xl flex items-center justify-center" style="background:rgba(6,182,212,.1);border:1px solid rgba(6,182,212,.25)">
+                        <span class="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0" style="background:rgba(6,182,212,.1);border:1px solid rgba(6,182,212,.25)">
                             <i class="fa-solid fa-globe" style="color:var(--cyan);font-size:14px"></i>
                         </span>
                         Frontend & DevOps
@@ -464,51 +543,52 @@
     </section>
 
     <!-- ═══════════════════════ SERVICES ═══════════════════════ -->
-    <section id="services" class="py-28 px-6">
+    <section id="services" class="section-py section-px">
         <div class="max-w-7xl mx-auto">
-            <div class="text-center reveal mb-14">
+            <div class="text-center reveal mb-10 md:mb-14">
                 <p class="section-label mb-2"><i class="fa-solid fa-briefcase mr-2"></i>03 — Services</p>
-                <h2 class="font-display font-black text-4xl" style="color:var(--text)">What I Build</h2>
+                <h2 class="font-display font-black section-heading" style="color:var(--text)">What I Build</h2>
                 <div style="height:3px;width:48px;background:linear-gradient(90deg,var(--primary),var(--cyan));border-radius:99px;margin:8px auto 0"></div>
                 <p class="mt-5 max-w-lg mx-auto text-base" style="color:var(--muted)">Enterprise solutions built with clean architecture and automated pipelines.</p>
             </div>
-            <div class="grid md:grid-cols-3 gap-6">
-                <div class="glass card-hover rounded-3xl p-8 reveal" style="border:1px solid var(--border)">
+            <!-- 1 col mobile, 2 col sm, 3 col lg -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="glass card-hover rounded-3xl p-6 md:p-8 reveal" style="border:1px solid var(--border)">
                     <div class="w-14 h-14 rounded-2xl flex items-center justify-center mb-5" style="background:rgba(139,92,246,.1);border:1px solid rgba(139,92,246,.2)">
                         <i class="fa-solid fa-building text-2xl" style="color:var(--primary)"></i>
                     </div>
                     <h3 class="font-black text-base mb-3 uppercase tracking-wide" style="color:var(--text)">SaaS Platforms</h3>
                     <p class="text-sm leading-relaxed" style="color:var(--muted)">Multi-tenant SaaS systems with subscription billing, role-based access, automated invoicing, and real-time dashboards.</p>
                 </div>
-                <div class="glass card-hover rounded-3xl p-8 reveal d1" style="border:1px solid var(--border)">
+                <div class="glass card-hover rounded-3xl p-6 md:p-8 reveal d1" style="border:1px solid var(--border)">
                     <div class="w-14 h-14 rounded-2xl flex items-center justify-center mb-5" style="background:rgba(6,182,212,.08);border:1px solid rgba(6,182,212,.2)">
                         <i class="fa-solid fa-cash-register text-2xl" style="color:var(--cyan)"></i>
                     </div>
                     <h3 class="font-black text-base mb-3 uppercase tracking-wide" style="color:var(--text)">POS Systems</h3>
                     <p class="text-sm leading-relaxed" style="color:var(--muted)">Custom point-of-sale for restaurants & retail — order management, billing, inventory control, and live reporting.</p>
                 </div>
-                <div class="glass card-hover rounded-3xl p-8 reveal d2" style="border:1px solid var(--border)">
+                <div class="glass card-hover rounded-3xl p-6 md:p-8 reveal d2" style="border:1px solid var(--border)">
                     <div class="w-14 h-14 rounded-2xl flex items-center justify-center mb-5" style="background:rgba(139,92,246,.1);border:1px solid rgba(139,92,246,.2)">
                         <i class="fa-brands fa-github text-2xl" style="color:var(--primary)"></i>
                     </div>
                     <h3 class="font-black text-base mb-3 uppercase tracking-wide" style="color:var(--text)">CI/CD Automation</h3>
                     <p class="text-sm leading-relaxed" style="color:var(--muted)">GitHub Actions pipelines, automated testing, syntax checks, security audits, and deployment workflows on every push.</p>
                 </div>
-                <div class="glass card-hover rounded-3xl p-8 reveal d1" style="border:1px solid var(--border)">
+                <div class="glass card-hover rounded-3xl p-6 md:p-8 reveal d1" style="border:1px solid var(--border)">
                     <div class="w-14 h-14 rounded-2xl flex items-center justify-center mb-5" style="background:rgba(6,182,212,.08);border:1px solid rgba(6,182,212,.2)">
                         <i class="fa-solid fa-cart-shopping text-2xl" style="color:var(--cyan)"></i>
                     </div>
                     <h3 class="font-black text-base mb-3 uppercase tracking-wide" style="color:var(--text)">E-Commerce</h3>
                     <p class="text-sm leading-relaxed" style="color:var(--muted)">Modern e-commerce platforms with TypeScript & React — product catalog, cart, order tracking, and payment integration.</p>
                 </div>
-                <div class="glass card-hover rounded-3xl p-8 reveal d2" style="border:1px solid var(--border)">
+                <div class="glass card-hover rounded-3xl p-6 md:p-8 reveal d2" style="border:1px solid var(--border)">
                     <div class="w-14 h-14 rounded-2xl flex items-center justify-center mb-5" style="background:rgba(139,92,246,.1);border:1px solid rgba(139,92,246,.2)">
                         <i class="fa-solid fa-database text-2xl" style="color:var(--primary)"></i>
                     </div>
                     <h3 class="font-black text-base mb-3 uppercase tracking-wide" style="color:var(--text)">Database Design</h3>
                     <p class="text-sm leading-relaxed" style="color:var(--muted)">Optimized MySQL & PostgreSQL schemas, query tuning, migrations, and data integrity architecture for enterprise systems.</p>
                 </div>
-                <div class="glass card-hover rounded-3xl p-8 reveal d3" style="border:1px solid var(--border)">
+                <div class="glass card-hover rounded-3xl p-6 md:p-8 reveal d3" style="border:1px solid var(--border)">
                     <div class="w-14 h-14 rounded-2xl flex items-center justify-center mb-5" style="background:rgba(6,182,212,.08);border:1px solid rgba(6,182,212,.2)">
                         <i class="fa-solid fa-hospital text-2xl" style="color:var(--cyan)"></i>
                     </div>
@@ -520,20 +600,20 @@
     </section>
 
     <!-- ═══════════════════════ PROJECTS ═══════════════════════ -->
-    <section id="work" class="py-28 px-6 relative" style="background:rgba(0,0,0,0.12)">
+    <section id="work" class="section-py section-px relative" style="background:rgba(0,0,0,0.12)">
         <div class="absolute inset-0 grid-bg opacity-15"></div>
         <div class="max-w-7xl mx-auto relative z-10">
-            <div class="text-center reveal mb-14">
+            <div class="text-center reveal mb-10 md:mb-14">
                 <p class="section-label mb-2"><i class="fa-solid fa-code mr-2"></i>04 — Work</p>
-                <h2 class="font-display font-black text-4xl" style="color:var(--text)">Featured Projects</h2>
+                <h2 class="font-display font-black section-heading" style="color:var(--text)">Featured Projects</h2>
                 <div style="height:3px;width:48px;background:linear-gradient(90deg,var(--primary),var(--cyan));border-radius:99px;margin:8px auto 0"></div>
             </div>
 
-            <!-- Big featured project -->
+            <!-- Big featured project: image on top / text below on mobile; side-by-side on lg -->
             <div class="glass proj-card card-hover rounded-3xl overflow-hidden mb-8 reveal" style="border:1px solid var(--border)">
-                <div class="grid lg:grid-cols-2 gap-0">
+                <div class="flex flex-col lg:grid lg:grid-cols-2 lg:gap-0">
                     <!-- Screenshot -->
-                    <div class="relative overflow-hidden" style="height:360px">
+                    <div class="relative overflow-hidden" style="height:260px">
                         <img src="assets/property_management_mockup.png" class="proj-img" alt="Property Management SaaS"/>
                         <div class="absolute inset-0" style="background:linear-gradient(135deg, rgba(139,92,246,0.3) 0%, transparent 60%)"></div>
                         <span class="absolute top-5 left-5 btn-primary" style="font-size:9px;padding:6px 14px;border-radius:8px">
@@ -541,13 +621,13 @@
                         </span>
                     </div>
                     <!-- Info -->
-                    <div class="p-10 flex flex-col justify-center">
+                    <div class="p-6 md:p-10 flex flex-col justify-center">
                         <div class="flex items-center gap-3 mb-4">
-                            <div class="w-12 h-12 rounded-2xl flex items-center justify-center" style="background:rgba(139,92,246,.12);border:1px solid rgba(139,92,246,.25)">
+                            <div class="w-12 h-12 rounded-2xl flex items-center justify-center flex-shrink-0" style="background:rgba(139,92,246,.12);border:1px solid rgba(139,92,246,.25)">
                                 <i class="fa-solid fa-building text-xl" style="color:var(--primary)"></i>
                             </div>
                             <div>
-                                <h3 class="font-black text-xl" style="color:var(--text)">Property Management SaaS</h3>
+                                <h3 class="font-black text-lg md:text-xl" style="color:var(--text)">Property Management SaaS</h3>
                                 <p style="font-size:11px;color:var(--primary);font-weight:700">Enterprise Real Estate Platform</p>
                             </div>
                         </div>
@@ -567,8 +647,8 @@
                 </div>
             </div>
 
-            <!-- Row 2: 3 cards -->
-            <div class="grid md:grid-cols-3 gap-6 mb-6">
+            <!-- Row 2: 3 cards — 1 col mobile, 3 col lg -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
                 <!-- Restaurant POS -->
                 <div class="glass proj-card card-hover rounded-3xl overflow-hidden reveal" style="border:1px solid var(--border)">
                     <div class="relative overflow-hidden" style="height:200px">
@@ -614,7 +694,7 @@
                     </div>
                 </div>
 
-                <!-- School/Hospital -->
+                <!-- Hospital Management -->
                 <div class="glass proj-card card-hover rounded-3xl overflow-hidden reveal d2" style="border:1px solid var(--border)">
                     <div class="relative overflow-hidden" style="height:200px">
                         <img src="assets/school_management_mockup.png" class="proj-img" alt="Management System"/>
@@ -638,11 +718,11 @@
                 </div>
             </div>
 
-            <!-- Row 3: 2 cards -->
-            <div class="grid md:grid-cols-2 gap-6">
+            <!-- Row 3: 2 cards — 1 col mobile, 2 col md -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <!-- Grocery -->
                 <div class="glass proj-card card-hover rounded-3xl overflow-hidden reveal" style="border:1px solid var(--border)">
-                    <div class="grid sm:grid-cols-2 gap-0">
+                    <div class="flex flex-col sm:grid sm:grid-cols-2 gap-0">
                         <div class="relative overflow-hidden" style="height:180px">
                             <div class="w-full h-full flex items-center justify-center" style="background:linear-gradient(135deg,rgba(6,182,212,.15),rgba(139,92,246,.1))">
                                 <i class="fa-solid fa-basket-shopping" style="font-size:4rem;color:var(--cyan);opacity:.5"></i>
@@ -665,7 +745,7 @@
 
                 <!-- Marso Electronics -->
                 <div class="glass proj-card card-hover rounded-3xl overflow-hidden reveal d1" style="border:1px solid var(--border)">
-                    <div class="grid sm:grid-cols-2 gap-0">
+                    <div class="flex flex-col sm:grid sm:grid-cols-2 gap-0">
                         <div class="relative overflow-hidden" style="height:180px">
                             <div class="w-full h-full flex items-center justify-center" style="background:linear-gradient(135deg,rgba(139,92,246,.15),rgba(6,182,212,.1))">
                                 <i class="fa-solid fa-microchip" style="font-size:4rem;color:var(--primary);opacity:.5"></i>
@@ -696,36 +776,36 @@
     </section>
 
     <!-- ═══════════════════════ JOURNEY ═══════════════════════ -->
-    <section id="journey" class="py-28 px-6">
+    <section id="journey" class="section-py section-px">
         <div class="max-w-4xl mx-auto">
-            <div class="text-center reveal mb-14">
+            <div class="text-center reveal mb-10 md:mb-14">
                 <p class="section-label mb-2"><i class="fa-solid fa-timeline mr-2"></i>05 — Journey</p>
-                <h2 class="font-display font-black text-4xl" style="color:var(--text)">My Journey</h2>
+                <h2 class="font-display font-black section-heading" style="color:var(--text)">My Journey</h2>
                 <div style="height:3px;width:48px;background:linear-gradient(90deg,var(--primary),var(--cyan));border-radius:99px;margin:8px auto 0"></div>
             </div>
-            <div class="relative space-y-14" style="border-left:2px solid var(--border);margin-left:1.5rem">
-                <div class="relative pl-10 group reveal">
-                    <span class="absolute -left-[11px] top-1.5 w-5 h-5 rounded-full" style="background:var(--primary);border:3px solid var(--bg);box-shadow:0 0 18px rgba(139,92,246,.7)"></span>
+            <div class="relative space-y-10 md:space-y-14" style="border-left:2px solid var(--border);margin-left:1rem md:1.5rem">
+                <div class="relative pl-7 md:pl-10 group reveal">
+                    <span class="absolute -left-[11px] top-1.5 w-5 h-5 rounded-full flex-shrink-0" style="background:var(--primary);border:3px solid var(--bg);box-shadow:0 0 18px rgba(139,92,246,.7)"></span>
                     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-3">
-                        <h3 class="font-black text-xl" style="color:var(--text)"><i class="fa-solid fa-crown mr-2" style="color:var(--primary)"></i>Senior Systems Architect</h3>
+                        <h3 class="font-black text-lg md:text-xl" style="color:var(--text)"><i class="fa-solid fa-crown mr-2" style="color:var(--primary)"></i>Senior Systems Architect</h3>
                         <span class="tag mt-2 sm:mt-0 w-fit" style="color:var(--primary);border-color:rgba(139,92,246,.3)">2021 – Present</span>
                     </div>
                     <p class="font-bold text-sm mb-2" style="color:var(--primary)">Enterprise SaaS & Systems</p>
                     <p class="text-sm leading-relaxed" style="color:var(--muted)">Designing enterprise SaaS platforms — Property Management, Hospital Systems, POS — with full CI/CD pipelines, MVC architecture, and automated deployments.</p>
                 </div>
-                <div class="relative pl-10 group reveal d1">
+                <div class="relative pl-7 md:pl-10 group reveal d1">
                     <span class="absolute -left-[11px] top-1.5 w-5 h-5 rounded-full transition-all duration-300" style="background:var(--surface);border:3px solid var(--border)"></span>
                     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-3">
-                        <h3 class="font-black text-xl" style="color:var(--text)"><i class="fa-solid fa-code mr-2" style="color:var(--muted)"></i>Full-Stack Developer</h3>
+                        <h3 class="font-black text-lg md:text-xl" style="color:var(--text)"><i class="fa-solid fa-code mr-2" style="color:var(--muted)"></i>Full-Stack Developer</h3>
                         <span class="tag mt-2 sm:mt-0 w-fit">2018 – 2021</span>
                     </div>
                     <p class="font-bold text-sm mb-2" style="color:var(--muted)">Digital Agency & Freelance</p>
                     <p class="text-sm leading-relaxed" style="color:var(--muted)">Built custom web apps for diverse clients in e-commerce, logistics, and healthcare. Optimized database queries improving performance by 40%.</p>
                 </div>
-                <div class="relative pl-10 group reveal d2">
+                <div class="relative pl-7 md:pl-10 group reveal d2">
                     <span class="absolute -left-[11px] top-1.5 w-5 h-5 rounded-full transition-all duration-300" style="background:var(--surface);border:3px solid var(--border)"></span>
                     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-3">
-                        <h3 class="font-black text-xl" style="color:var(--text)"><i class="fa-solid fa-seedling mr-2" style="color:var(--muted)"></i>Junior Web Developer</h3>
+                        <h3 class="font-black text-lg md:text-xl" style="color:var(--text)"><i class="fa-solid fa-seedling mr-2" style="color:var(--muted)"></i>Junior Web Developer</h3>
                         <span class="tag mt-2 sm:mt-0 w-fit">2016 – 2018</span>
                     </div>
                     <p class="font-bold text-sm mb-2" style="color:var(--muted)">Freelance & Contract</p>
@@ -735,37 +815,38 @@
         </div>
     </section>
 
-    <!-- ═══════════════════════ CONTACT ═══════════════════════ -->
-    <footer id="contact" class="py-28 px-6 relative" style="border-top:1px solid var(--border);background:rgba(0,0,0,0.2)">
+    <!-- ═══════════════════════ CONTACT / FOOTER ═══════════════════════ -->
+    <footer id="contact" class="section-py section-px relative" style="border-top:1px solid var(--border);background:rgba(0,0,0,0.2)">
         <div class="absolute inset-0 grid-bg opacity-10"></div>
         <div class="max-w-4xl mx-auto text-center flex flex-col items-center relative z-10">
             <p class="section-label mb-4 reveal"><i class="fa-solid fa-envelope mr-2"></i>06 — Contact</p>
             <h2 class="font-display font-black leading-tight mb-6 reveal d1" style="font-size:clamp(2rem,5vw,4rem);color:var(--text)">
                 Let's Build<br/><span class="grad">Something Great</span>
             </h2>
-            <p class="text-lg leading-relaxed mb-12 reveal d2" style="color:var(--muted);max-width:480px">
+            <p class="text-base md:text-lg leading-relaxed mb-10 reveal d2" style="color:var(--muted);max-width:480px">
                 Have a SaaS product, enterprise system, or complex project in mind? Let's make it happen.
             </p>
-            <div class="flex flex-wrap gap-4 justify-center mb-14 reveal d3">
-                <a href="mailto:hello@abdullahimukhtar.com" class="btn-primary">
+            <!-- Buttons: full-width stacked on mobile, inline on sm+ -->
+            <div class="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center mb-12 reveal d3 w-full sm:w-auto">
+                <a href="mailto:hello@abdullahimukhtar.com" class="btn-primary btn-stack-mobile">
                     <i class="fa-solid fa-envelope"></i> Send Email
                 </a>
-                <a href="https://www.linkedin.com/in/abdullahi-deeer-562aa530b" target="_blank" class="btn-ghost">
+                <a href="https://www.linkedin.com/in/abdullahi-deeer-562aa530b" target="_blank" class="btn-ghost btn-stack-mobile">
                     <i class="fa-brands fa-linkedin"></i> LinkedIn
                 </a>
             </div>
-            <!-- Social icons -->
-            <div class="flex gap-5 mb-14 reveal d4">
-                <a href="https://github.com/Abdullahi0720006477" target="_blank" class="glass card-hover rounded-2xl p-4 flex flex-col items-center gap-2" style="border:1px solid var(--border)">
-                    <i class="fa-brands fa-github text-2xl" style="color:var(--text)"></i>
+            <!-- Social icons: smaller gap on mobile -->
+            <div class="flex gap-3 sm:gap-5 mb-12 reveal d4">
+                <a href="https://github.com/Abdullahi0720006477" target="_blank" class="glass card-hover rounded-2xl p-3 sm:p-4 flex flex-col items-center gap-2" style="border:1px solid var(--border)">
+                    <i class="fa-brands fa-github text-xl sm:text-2xl" style="color:var(--text)"></i>
                     <span style="font-size:9px;font-weight:900;text-transform:uppercase;letter-spacing:.15em;color:var(--muted)">GitHub</span>
                 </a>
-                <a href="https://www.linkedin.com/in/abdullahi-deeer-562aa530b" target="_blank" class="glass card-hover rounded-2xl p-4 flex flex-col items-center gap-2" style="border:1px solid var(--border)">
-                    <i class="fa-brands fa-linkedin text-2xl" style="color:var(--text)"></i>
+                <a href="https://www.linkedin.com/in/abdullahi-deeer-562aa530b" target="_blank" class="glass card-hover rounded-2xl p-3 sm:p-4 flex flex-col items-center gap-2" style="border:1px solid var(--border)">
+                    <i class="fa-brands fa-linkedin text-xl sm:text-2xl" style="color:var(--text)"></i>
                     <span style="font-size:9px;font-weight:900;text-transform:uppercase;letter-spacing:.15em;color:var(--muted)">LinkedIn</span>
                 </a>
-                <a href="https://personal-portfolio-v1-three.vercel.app/" class="glass card-hover rounded-2xl p-4 flex flex-col items-center gap-2" style="border:1px solid var(--border)">
-                    <i class="fa-solid fa-globe text-2xl" style="color:var(--text)"></i>
+                <a href="https://personal-portfolio-v1-three.vercel.app/" class="glass card-hover rounded-2xl p-3 sm:p-4 flex flex-col items-center gap-2" style="border:1px solid var(--border)">
+                    <i class="fa-solid fa-globe text-xl sm:text-2xl" style="color:var(--text)"></i>
                     <span style="font-size:9px;font-weight:900;text-transform:uppercase;letter-spacing:.15em;color:var(--muted)">Portfolio</span>
                 </a>
             </div>
@@ -781,7 +862,7 @@
     }
     if(localStorage.getItem('theme') === 'light') document.documentElement.classList.add('light');
 
-    // ── Cursor ──
+    // ── Cursor (pointer devices only — touch already hidden via CSS) ──
     const C = document.getElementById('C'), CR = document.getElementById('CR');
     let mx=0,my=0,fx=0,fy=0;
     document.addEventListener('mousemove',e=>{ mx=e.clientX; my=e.clientY; C.style.left=mx+'px'; C.style.top=my+'px'; });
@@ -791,7 +872,7 @@
         el.addEventListener('mouseleave',()=>{ C.style.transform='translate(-50%,-50%) scale(1)'; CR.style.width='32px'; CR.style.height='32px'; });
     });
 
-    // ── Typing ──
+    // ── Typing animation ──
     const words=['Systems','SaaS Apps','Platforms','APIs','Solutions'];
     let wi=0,ci=0,del=false;
     const tel=document.getElementById('typed');
@@ -811,11 +892,8 @@
     }
 
     // ── Scroll reveal ──
-    new IntersectionObserver((es)=>es.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('in'); }),{threshold:.08,rootMargin:'0px 0px -40px 0px'})
-        .observe(document.querySelectorAll('.reveal').forEach?undefined:null) || (() => {
-        const obs = new IntersectionObserver((es)=>es.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('in'); }),{threshold:.08,rootMargin:'0px 0px -40px 0px'});
-        document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
-    })();
+    const revObs = new IntersectionObserver((es)=>es.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('in'); }),{threshold:.08,rootMargin:'0px 0px -40px 0px'});
+    document.querySelectorAll('.reveal').forEach(el=>revObs.observe(el));
 
     // ── Skill bars ──
     const skillObs = new IntersectionObserver(es=>es.forEach(e=>{
@@ -837,10 +915,6 @@
     window.addEventListener('scroll',()=>{
         document.getElementById('navbar').classList.toggle('scrolled', window.scrollY>60);
     });
-
-    // ── Fix reveal observer ──
-    const revObs = new IntersectionObserver((es)=>es.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('in'); }),{threshold:.08,rootMargin:'0px 0px -40px 0px'});
-    document.querySelectorAll('.reveal').forEach(el=>revObs.observe(el));
     </script>
 </body>
 </html>
