@@ -498,11 +498,37 @@ html.light .text-slate-400{color:var(--muted)!important}
     <p class="sec-lbl mb-4 rev"><i class="fa-solid fa-envelope mr-2"></i>06 — Contact</p>
     <h2 class="font-black leading-tight mb-5 rev d1" style="font-size:clamp(1.8rem,5vw,3.5rem);color:var(--text)">Let's Build<br/><span class="grad">Something Great</span></h2>
     <p class="text-sm md:text-base leading-relaxed mb-10 rev d2" style="color:var(--muted);max-width:440px">Have a SaaS product, enterprise system, or complex project? Let's make it happen.</p>
-    <div class="flex flex-wrap gap-3 justify-center mb-12 rev d3">
-      <a href="mailto:hello@abdullahimukhtar.com" class="btn-p mag-btn"><i class="fa-solid fa-envelope"></i>Send Email</a>
+
+    <!-- CTA Buttons -->
+    <div class="flex flex-wrap gap-3 justify-center mb-10 rev d3">
+      <a href="https://wa.me/254710997587" target="_blank" class="btn-p mag-btn" style="background:linear-gradient(135deg,#25d366,#128c3e);box-shadow:0 0 28px rgba(37,211,102,.4)"><i class="fa-brands fa-whatsapp"></i>WhatsApp Me</a>
+      <a href="mailto:hello@abdullahimukhtar.com" class="btn-g mag-btn"><i class="fa-solid fa-envelope"></i>Send Email</a>
       <a href="https://www.linkedin.com/in/abdullahi-deeer-562aa530b" target="_blank" class="btn-g mag-btn"><i class="fa-brands fa-linkedin"></i>LinkedIn</a>
     </div>
+
+    <!-- WhatsApp QR Card -->
+    <div class="glass proj rounded-3xl p-6 mb-10 rev d3" style="border:1px solid rgba(37,211,102,.25);max-width:320px;width:100%">
+      <div class="flex items-center gap-3 mb-5 justify-center">
+        <div class="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0" style="background:rgba(37,211,102,.12);border:1px solid rgba(37,211,102,.3)">
+          <i class="fa-brands fa-whatsapp text-xl" style="color:#25d366"></i>
+        </div>
+        <div class="text-left">
+          <p class="font-black text-sm" style="color:var(--text)">WhatsApp</p>
+          <p style="font-size:11px;color:#25d366;font-weight:700">+254 710 997 587</p>
+        </div>
+      </div>
+      <!-- QR Code — scan to open WhatsApp chat -->
+      <div class="flex justify-center mb-4">
+        <div class="rounded-2xl overflow-hidden p-2 bg-white" style="width:180px;height:180px;box-shadow:0 4px 24px rgba(0,0,0,.2)">
+          <img src="https://api.qrserver.com/v1/create-qr-code/?size=160x160&margin=4&data=https://wa.me/254710997587" width="160" height="160" alt="WhatsApp QR Code" style="display:block;border-radius:8px"/>
+        </div>
+      </div>
+      <p style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.18em;color:var(--muted)"><i class="fa-solid fa-camera mr-1"></i>Scan to chat on WhatsApp</p>
+    </div>
+
+    <!-- Social icon row -->
     <div class="flex gap-4 mb-12 rev d4">
+      <a href="https://wa.me/254710997587" target="_blank" class="glass proj rounded-2xl p-4 flex flex-col items-center gap-2" style="border:1px solid rgba(37,211,102,.25);min-width:72px"><i class="fa-brands fa-whatsapp text-2xl" style="color:#25d366"></i><span style="font-size:9px;font-weight:900;text-transform:uppercase;letter-spacing:.12em;color:var(--muted)">WhatsApp</span></a>
       <a href="https://github.com/Abdullahi0720006477" target="_blank" class="glass proj rounded-2xl p-4 flex flex-col items-center gap-2" style="border:1px solid var(--border);min-width:72px"><i class="fa-brands fa-github text-2xl" style="color:var(--text)"></i><span style="font-size:9px;font-weight:900;text-transform:uppercase;letter-spacing:.12em;color:var(--muted)">GitHub</span></a>
       <a href="https://www.linkedin.com/in/abdullahi-deeer-562aa530b" target="_blank" class="glass proj rounded-2xl p-4 flex flex-col items-center gap-2" style="border:1px solid var(--border);min-width:72px"><i class="fa-brands fa-linkedin text-2xl" style="color:var(--text)"></i><span style="font-size:9px;font-weight:900;text-transform:uppercase;letter-spacing:.12em;color:var(--muted)">LinkedIn</span></a>
       <a href="https://personal-portfolio-v1-three.vercel.app/" class="glass proj rounded-2xl p-4 flex flex-col items-center gap-2" style="border:1px solid var(--border);min-width:72px"><i class="fa-solid fa-globe text-2xl" style="color:var(--text)"></i><span style="font-size:9px;font-weight:900;text-transform:uppercase;letter-spacing:.12em;color:var(--muted)">Portfolio</span></a>
