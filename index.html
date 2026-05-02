@@ -558,24 +558,26 @@ setTimeout(type,800);
 function toggleMob(){document.getElementById('mob').classList.toggle('open');document.getElementById('mob-ov').classList.toggle('hidden')}
 
 // ── Scroll reveal ──
-const revObs=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('in')}),{threshold:.08,rootMargin:'0px 0px -40px 0px'});
+const revObs=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('in')}),{threshold:0,rootMargin:'0px 0px 0px 0px'});
 document.querySelectorAll('.rev').forEach(el=>revObs.observe(el));
+// Safety fallback — force-show all .rev elements after 400ms so nothing stays blank
+setTimeout(()=>document.querySelectorAll('.rev').forEach(el=>el.classList.add('in')),400);
 
 // ── Skill bars ──
-const skillObs=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)e.target.querySelectorAll('.bar-f').forEach(b=>b.style.width=b.dataset.w+'%')}),{threshold:.3});
+const skillObs=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)e.target.querySelectorAll('.bar-f').forEach(b=>b.style.width=b.dataset.w+'%')}),{threshold:.1});
 document.querySelectorAll('#skills').forEach(el=>skillObs.observe(el));
 
 // ── Counters ──
-const cntObs=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)e.target.querySelectorAll('[data-count]').forEach(el=>{const t=+el.dataset.count,s=el.dataset.suffix||'';let c=0;const step=t/60;const id=setInterval(()=>{c=Math.min(c+step,t);el.textContent=Math.floor(c)+s;if(c>=t)clearInterval(id)},22)})}),{threshold:.5});
+const cntObs=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)e.target.querySelectorAll('[data-count]').forEach(el=>{const t=+el.dataset.count,s=el.dataset.suffix||'';let c=0;const step=t/60;const id=setInterval(()=>{c=Math.min(c+step,t);el.textContent=Math.floor(c)+s;if(c>=t)clearInterval(id)},22)})}),{threshold:.1});
 document.querySelectorAll('#about').forEach(el=>cntObs.observe(el));
 
 // ── Nav scroll ──
 window.addEventListener('scroll',()=>document.getElementById('nav').classList.toggle('scrolled',window.scrollY>60));
 
-// ── GSAP 3D scroll animations ──
+// ── GSAP 3D scroll animations (no opacity — .rev CSS handles fade-in) ──
 gsap.registerPlugin(ScrollTrigger);
 gsap.utils.toArray('.proj').forEach((el,i)=>{
-  gsap.from(el,{scrollTrigger:{trigger:el,start:'top 85%'},y:60,opacity:0,rotationX:15,transformPerspective:800,duration:.9,delay:i*.05,ease:'power3.out'});
+  gsap.from(el,{scrollTrigger:{trigger:el,start:'top 90%'},y:40,rotationX:10,transformPerspective:800,duration:.8,delay:i*.04,ease:'power3.out'});
 });
 gsap.from('#nav',{y:-80,opacity:0,duration:.8,ease:'power3.out'});
 gsap.from('.orb',{scale:0,opacity:0,duration:2,stagger:.3,ease:'power2.out'});
