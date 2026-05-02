@@ -1,920 +1,599 @@
 <!DOCTYPE html>
 <html lang="en" class="dark">
 <head>
-    <meta charset="UTF-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Abdullahidev | Senior Systems Architect & SaaS Engineer</title>
-    <meta name="description" content="Senior Systems Architect & SaaS Product Engineer building scalable enterprise systems."/>
-    <!-- Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet"/>
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
-    <!-- Material Symbols -->
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,1,0" rel="stylesheet"/>
-    <!-- Tailwind -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    fontFamily: { sans: ['Inter','sans-serif'], display: ['Space Grotesk','sans-serif'] },
-                    colors: {
-                        primary: { DEFAULT:'#8b5cf6', dark:'#7c3aed', light:'#a78bfa' },
-                        cyan:    { accent:'#06b6d4' },
-                    }
-                }
-            }
-        }
-    </script>
-    <style>
-        :root {
-            --bg:       #09090f;
-            --surface:  #111119;
-            --border:   rgba(255,255,255,0.07);
-            --text:     #e2e8f0;
-            --muted:    #94a3b8;
-            --primary:  #8b5cf6;
-            --cyan:     #06b6d4;
-            --card-bg:  rgba(255,255,255,0.03);
-        }
-        html.light {
-            --bg:       #f8f7ff;
-            --surface:  #ffffff;
-            --border:   rgba(0,0,0,0.08);
-            --text:     #1e1b4b;
-            --muted:    #6b7280;
-            --primary:  #7c3aed;
-            --cyan:     #0891b2;
-            --card-bg:  rgba(139,92,246,0.04);
-        }
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Abdullahidev | Senior Systems Architect</title>
+<meta name="description" content="Senior Systems Architect & SaaS Product Engineer building scalable enterprise systems."/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@500;600;700;800&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+<script src="https://cdn.tailwindcss.com"></script>
+<!-- GSAP + ScrollTrigger -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<!-- Vanilla Tilt 3D -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.1/vanilla-tilt.min.js"></script>
 
-        *, *::before, *::after { box-sizing: border-box; margin: 0; }
+<style>
+:root {
+  --bg:#09090f; --surface:#111119; --border:rgba(255,255,255,0.07);
+  --text:#f1f5f9; --muted:#94a3b8; --p:#8b5cf6; --c:#06b6d4;
+  --card:rgba(255,255,255,0.03);
+}
+html.light {
+  --bg:#f5f3ff; --surface:#ffffff; --border:rgba(139,92,246,0.12);
+  --text:#1e1b4b; --muted:#6b7280; --p:#7c3aed; --c:#0891b2;
+  --card:rgba(139,92,246,0.04);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden;transition:background .4s,color .4s}
+h1,h2,h3{font-family:'Space Grotesk',sans-serif}
 
-        body {
-            font-family: 'Inter', sans-serif;
-            background: var(--bg);
-            color: var(--text);
-            overflow-x: hidden;
-            scroll-behavior: smooth;
-            transition: background 0.4s ease, color 0.4s ease;
-        }
+/* ── Canvas BG ── */
+#bg-canvas{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none;opacity:.5}
 
-        /* ── Cursor ── */
-        .cursor, .cursor-ring {
-            position: fixed; border-radius: 50%;
-            pointer-events: none; z-index: 9999;
-            transform: translate(-50%,-50%);
-            transition: opacity 0.3s;
-        }
-        .cursor      { width:10px; height:10px; background:var(--primary); }
-        .cursor-ring { width:32px; height:32px; border:1.5px solid var(--primary); opacity:0.5; transition: transform 0.15s ease, width 0.3s, height 0.3s; }
-        /* Disable cursor on touch devices */
-        @media (pointer:coarse){ .cursor,.cursor-ring{ display:none } body{ cursor:auto } }
+/* ── Cursor ── */
+.cur,.cur-r{position:fixed;border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%)}
+.cur{width:8px;height:8px;background:var(--p);transition:transform .1s}
+.cur-r{width:30px;height:30px;border:1.5px solid var(--p);opacity:.5;transition:transform .18s,width .3s,height .3s}
+@media(pointer:coarse){.cur,.cur-r{display:none}}
 
-        /* ── Glass ── */
-        .glass {
-            background: var(--card-bg);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid var(--border);
-            transition: background 0.4s ease, border 0.4s ease;
-        }
-        html.light .glass { box-shadow: 0 2px 20px rgba(139,92,246,0.06); }
+/* ── Glass ── */
+.glass{background:var(--card);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid var(--border)}
+html.light .glass{box-shadow:0 2px 24px rgba(139,92,246,.07)}
 
-        .card-hover {
-            transition: transform 0.35s cubic-bezier(.4,0,.2,1), box-shadow 0.35s ease, border-color 0.35s ease;
-        }
-        .card-hover:hover {
-            transform: translateY(-6px);
-            border-color: var(--primary) !important;
-            box-shadow: 0 20px 60px -15px rgba(139,92,246,0.25);
-        }
+/* ── 3D card ── */
+.card3d{transform-style:preserve-3d;transform:perspective(1000px)}
+.card3d-inner{transition:transform .4s cubic-bezier(.4,0,.2,1);transform-style:preserve-3d}
+.card3d:hover .card3d-inner{transform:rotateX(-6deg) rotateY(4deg) scale(1.02)}
 
-        /* ── Grid bg ── */
-        .grid-bg {
-            background-image: radial-gradient(circle at 1px 1px, var(--border) 1px, transparent 0);
-            background-size: 36px 36px;
-        }
+/* ── Magnetic button ── */
+.mag-btn{transition:transform .3s cubic-bezier(.4,0,.2,1),box-shadow .3s}
 
-        /* ── Gradient text ── */
-        .grad { background: linear-gradient(135deg, var(--primary) 0%, var(--cyan) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
-        .grad-white { background: linear-gradient(135deg, #fff 0%, #c4b5fd 60%, var(--cyan) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
-        html.light .grad-white { background: linear-gradient(135deg, #1e1b4b 0%, var(--primary) 60%, var(--cyan) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+/* ── Reveal ── */
+.rev{opacity:0;transform:translateY(48px);transition:opacity .8s ease,transform .8s ease}
+.rev.in{opacity:1;transform:translateY(0)}
+.d1{transition-delay:.1s}.d2{transition-delay:.2s}.d3{transition-delay:.3s}.d4{transition-delay:.4s}
 
-        /* ── Orbs ── */
-        .orb { position:fixed; border-radius:50%; filter:blur(100px); pointer-events:none; z-index:0; animation: orbf 18s ease-in-out infinite; }
-        @keyframes orbf { 0%,100%{transform:translate(0,0)} 50%{transform:translate(20px,-20px)} }
+/* ── Gradient text ── */
+.grad{background:linear-gradient(135deg,var(--p),var(--c));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.grad-h{background:linear-gradient(135deg,#fff 0%,#c4b5fd 50%,var(--c) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+html.light .grad-h{background:linear-gradient(135deg,#1e1b4b 0%,var(--p) 60%,var(--c) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
 
-        /* ── Scroll reveal ── */
-        .reveal { opacity:0; transform:translateY(36px); transition:opacity 0.7s ease, transform 0.7s ease; }
-        .reveal.in { opacity:1; transform:translateY(0); }
-        .d1{transition-delay:.08s} .d2{transition-delay:.16s} .d3{transition-delay:.24s} .d4{transition-delay:.32s} .d5{transition-delay:.40s}
+/* ── Grid bg ── */
+.grid-bg{background-image:radial-gradient(circle at 1px 1px,var(--border) 1px,transparent 0);background-size:36px 36px}
 
-        /* ── Float ── */
-        @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
-        .float { animation: float 4s ease-in-out infinite; }
+/* ── Skill bar ── */
+.bar-t{height:5px;border-radius:99px;background:var(--border);overflow:hidden}
+.bar-f{height:100%;border-radius:99px;background:linear-gradient(90deg,var(--p),var(--c));width:0;transition:width 1.8s cubic-bezier(.4,0,.2,1)}
 
-        /* ── Skill bar ── */
-        .bar-track { height:6px; border-radius:99px; background:var(--border); overflow:hidden; }
-        .bar-fill   { height:100%; border-radius:99px; background:linear-gradient(90deg, var(--primary), var(--cyan)); width:0; transition:width 1.6s cubic-bezier(.4,0,.2,1); }
+/* ── Typing ── */
+#typed::after{content:'|';animation:blink .9s step-end infinite;color:var(--c)}
+@keyframes blink{50%{opacity:0}}
 
-        /* ── Typing cursor ── */
-        #typed::after { content:'|'; animation: blink 0.9s step-end infinite; color:var(--cyan); }
-        @keyframes blink { 50%{opacity:0} }
+/* ── Float ── */
+@keyframes float{0%,100%{transform:translateY(0) rotate(0deg)}50%{transform:translateY(-12px) rotate(1deg)}}
+.float{animation:float 4s ease-in-out infinite}
 
-        /* ── Nav ── */
-        #navbar { transition: background 0.4s ease, box-shadow 0.3s; }
-        #navbar.scrolled { box-shadow: 0 4px 30px rgba(0,0,0,0.25); }
-        .nav-link { position:relative; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.12em; color:var(--muted); transition:color 0.2s; }
-        .nav-link:hover { color:var(--text); }
-        .nav-link::after { content:''; position:absolute; bottom:-2px; left:0; width:0; height:2px; background:var(--primary); border-radius:2px; transition:width 0.3s; }
-        .nav-link:hover::after { width:100%; }
+/* ── Glow orb ── */
+.orb{position:fixed;border-radius:50%;filter:blur(110px);pointer-events:none;z-index:0}
 
-        /* ── Theme toggle ── */
-        .theme-btn { width:48px; height:26px; border-radius:99px; background:var(--border); position:relative; cursor:pointer; transition:background 0.3s; border: 1px solid var(--border); flex-shrink:0; }
-        .theme-btn::after { content:''; position:absolute; top:3px; left:3px; width:18px; height:18px; border-radius:50%; background:var(--primary); transition:transform 0.3s; }
-        html.light .theme-btn::after { transform:translateX(22px); }
+/* ── Nav ── */
+#nav{transition:background .4s,box-shadow .3s;border-bottom:1px solid var(--border)}
+#nav.scrolled{box-shadow:0 4px 40px rgba(0,0,0,.3)}
+.nl{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--muted);transition:color .2s;position:relative}
+.nl::after{content:'';position:absolute;bottom:-3px;left:0;width:0;height:2px;background:var(--p);border-radius:2px;transition:width .3s}
+.nl:hover{color:var(--text)}.nl:hover::after{width:100%}
 
-        /* ── Mobile menu ── */
-        #mob-menu { transform:translateX(110%); transition:transform 0.4s cubic-bezier(.4,0,.2,1); }
-        #mob-menu.open { transform:translateX(0); }
+/* ── Theme toggle ── */
+.tog{width:46px;height:24px;border-radius:99px;background:var(--border);border:1px solid var(--border);position:relative;cursor:pointer;transition:background .3s}
+.tog::after{content:'';position:absolute;top:3px;left:3px;width:16px;height:16px;border-radius:50%;background:var(--p);transition:transform .3s}
+html.light .tog::after{transform:translateX(22px)}
 
-        /* ── Project image ── */
-        .proj-img { width:100%; height:100%; object-fit:cover; transition:transform 0.8s ease, filter 0.5s ease; filter:brightness(0.7) saturate(0.8); }
-        .proj-card:hover .proj-img { transform:scale(1.06); filter:brightness(0.85) saturate(1); }
+/* ── Buttons ── */
+.btn-p{background:var(--p);color:#fff;font-weight:800;font-size:11px;text-transform:uppercase;letter-spacing:.15em;border-radius:14px;padding:14px 28px;display:inline-flex;align-items:center;gap:8px;transition:all .3s;box-shadow:0 0 28px rgba(139,92,246,.4);cursor:pointer;white-space:nowrap}
+.btn-p:hover{transform:translateY(-2px) scale(1.03);box-shadow:0 8px 40px rgba(139,92,246,.55)}
+.btn-g{background:var(--card);border:1px solid var(--border);color:var(--text);font-weight:800;font-size:11px;text-transform:uppercase;letter-spacing:.15em;border-radius:14px;padding:14px 28px;display:inline-flex;align-items:center;gap:8px;transition:all .3s;backdrop-filter:blur(10px);cursor:pointer;white-space:nowrap}
+.btn-g:hover{border-color:var(--p);transform:translateY(-2px)}
 
-        /* ── Screenshot showcase ── */
-        .screenshot { border-radius:12px; overflow:hidden; box-shadow:0 8px 32px rgba(0,0,0,0.4); border:1px solid var(--border); }
-        html.light .screenshot { box-shadow:0 8px 32px rgba(139,92,246,0.12); }
+/* ── Tag ── */
+.tag{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;padding:4px 10px;border-radius:6px;background:var(--card);border:1px solid var(--border);color:var(--muted);white-space:nowrap}
 
-        /* ── Btn ── */
-        .btn-primary { background:var(--primary); color:#fff; font-weight:800; font-size:11px; text-transform:uppercase; letter-spacing:.15em; border-radius:14px; padding:14px 28px; display:inline-flex; align-items:center; justify-content:center; gap:8px; transition:all 0.3s; box-shadow:0 0 28px rgba(139,92,246,0.35); }
-        .btn-primary:hover { transform:scale(1.03); box-shadow:0 0 48px rgba(139,92,246,0.55); }
-        .btn-ghost { background:var(--card-bg); border:1px solid var(--border); color:var(--text); font-weight:800; font-size:11px; text-transform:uppercase; letter-spacing:.15em; border-radius:14px; padding:14px 28px; display:inline-flex; align-items:center; justify-content:center; gap:8px; transition:all 0.3s; backdrop-filter:blur(10px); }
-        .btn-ghost:hover { border-color:var(--primary); transform:scale(1.02); }
+/* ── Section ── */
+.sec{padding:5rem 1rem}
+@media(min-width:640px){.sec{padding:7rem 1.5rem}}
+.sec-lbl{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.25em;color:var(--p)}
+.sec-h{font-size:2rem;font-weight:800;color:var(--text);line-height:1.1}
+@media(min-width:768px){.sec-h{font-size:2.5rem}}
+.sec-line{height:3px;width:44px;background:linear-gradient(90deg,var(--p),var(--c));border-radius:99px;margin-top:8px}
 
-        /* ── Section label ── */
-        .section-label { font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:.25em; color:var(--primary); }
+/* ── Profile image ── */
+.profile-wrap{position:relative;width:100%;max-width:360px;margin:0 auto}
+.profile-img{width:100%;aspect-ratio:3/4;object-fit:cover;object-position:top center;border-radius:24px;display:block}
+@media(max-width:767px){
+  .profile-wrap{max-width:180px}
+  .profile-img{aspect-ratio:1/1;border-radius:50%;object-position:center top}
+}
 
-        /* ── Scrollbar ── */
-        ::-webkit-scrollbar { width:4px; }
-        ::-webkit-scrollbar-track { background:var(--bg); }
-        ::-webkit-scrollbar-thumb { background:var(--primary); border-radius:4px; }
+/* ── Floating cards — hidden on mobile ── */
+.fc{display:none}
+@media(min-width:768px){.fc{display:block}}
 
-        /* ── Light mode overrides ── */
-        html.light body { cursor:auto; }
-        html.light .text-slate-400 { color:var(--muted) !important; }
-        html.light .text-slate-500 { color:#9ca3af !important; }
-        html.light .text-white { color:var(--text) !important; }
-        html.light .border-white\/5  { border-color:rgba(0,0,0,0.06) !important; }
-        html.light .border-white\/10 { border-color:rgba(0,0,0,0.08) !important; }
-        html.light .bg-black\/20, html.light .bg-black\/40 { background:rgba(139,92,246,0.03) !important; }
+/* ── Project card ── */
+.proj{transition:transform .4s cubic-bezier(.4,0,.2,1),box-shadow .4s,border-color .3s}
+.proj:hover{transform:translateY(-8px) scale(1.01);box-shadow:0 30px 80px -10px rgba(139,92,246,.25);border-color:var(--p) !important}
 
-        /* ── Tag ── */
-        .tag { font-size:9px; font-weight:700; text-transform:uppercase; letter-spacing:.12em; padding:4px 10px; border-radius:6px; background:var(--card-bg); border:1px solid var(--border); color:var(--muted); }
+/* ── Mobile menu ── */
+#mob{transform:translateX(110%);transition:transform .4s cubic-bezier(.4,0,.2,1);width:min(280px,85vw)}
+#mob.open{transform:translateX(0)}
 
-        /* ── Mobile-specific: hero profile image ── */
-        /* circular on mobile, rounded-rect on desktop */
-        .hero-profile-img {
-            border-radius: 50%;
-            overflow: hidden;
-        }
-        @media (min-width: 768px) {
-            .hero-profile-img {
-                border-radius: 28px;
-            }
-        }
+/* ── 3D tilt override ── */
+.tilt-card{transform-style:preserve-3d}
+.tilt-card .inner{transform:translateZ(20px)}
 
-        /* ── Prevent overflow on mobile ── */
-        .hero-profile-wrapper {
-            width: 180px;
-            height: 180px;
-            flex-shrink: 0;
-        }
-        @media (min-width: 768px) {
-            .hero-profile-wrapper {
-                width: 100%;
-                height: auto;
-                max-width: 380px;
-            }
-        }
+/* ── Scrollbar ── */
+::-webkit-scrollbar{width:3px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--p);border-radius:4px}
 
-        /* ── Stats border fix on mobile (2x2 grid) ── */
-        @media (max-width: 639px) {
-            .stat-border { border-left: none !important; }
-            .stat-border-mobile { border-top: 1px solid var(--border); }
-        }
-
-        /* ── Section spacing — reduce on mobile ── */
-        .section-py { padding-top: 4rem; padding-bottom: 4rem; }
-        @media (min-width: 768px) {
-            .section-py { padding-top: 7rem; padding-bottom: 7rem; }
-        }
-
-        /* ── Section horizontal padding ── */
-        .section-px { padding-left: 1rem; padding-right: 1rem; }
-        @media (min-width: 640px) {
-            .section-px { padding-left: 1.5rem; padding-right: 1.5rem; }
-        }
-        @media (min-width: 1024px) {
-            .section-px { padding-left: 1.5rem; padding-right: 1.5rem; }
-        }
-
-        /* ── Section heading responsive ── */
-        .section-heading { font-size: 1.875rem; } /* text-3xl */
-        @media (min-width: 768px) {
-            .section-heading { font-size: 2.25rem; } /* text-4xl */
-        }
-
-        /* ── Mobile full-width buttons ── */
-        @media (max-width: 639px) {
-            .btn-stack-mobile { width: 100%; }
-        }
-    </style>
+/* ── Light overrides ── */
+html.light .grad-h *{color:inherit}
+html.light .text-slate-400{color:var(--muted)!important}
+</style>
 </head>
 <body>
-    <!-- Cursor -->
-    <div class="cursor" id="C"></div>
-    <div class="cursor-ring" id="CR"></div>
+<!-- Canvas particle background -->
+<canvas id="bg-canvas"></canvas>
 
-    <!-- Orbs -->
-    <div class="orb" style="width:500px;height:500px;background:rgba(139,92,246,0.12);top:-80px;left:-80px;"></div>
-    <div class="orb" style="width:400px;height:400px;background:rgba(6,182,212,0.08);bottom:10%;right:-80px;animation-delay:-9s"></div>
+<!-- Ambient orbs -->
+<div class="orb" style="width:500px;height:500px;background:rgba(139,92,246,.1);top:-100px;left:-100px;animation:float 20s ease-in-out infinite"></div>
+<div class="orb" style="width:350px;height:350px;background:rgba(6,182,212,.07);bottom:5%;right:-80px;animation:float 16s ease-in-out infinite reverse"></div>
 
-    <!-- ═══════════════════════ NAVBAR ═══════════════════════ -->
-    <nav id="navbar" class="fixed top-0 w-full z-50 glass border-b" style="border-color:var(--border)">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
-            <!-- Logo — always visible -->
-            <a href="#" class="flex items-center gap-2.5 flex-shrink-0">
-                <div class="w-9 h-9 rounded-full overflow-hidden" style="border:2px solid var(--primary)">
-                    <img src="assets/profile.jpg" class="w-full h-full object-cover" alt="Abdullahidev"/>
-                </div>
-                <span class="font-black text-base" style="color:var(--text)">Abdullahi<span style="color:var(--primary)">dev</span></span>
-            </a>
+<!-- Cursor -->
+<div class="cur" id="C"></div>
+<div class="cur-r" id="CR"></div>
 
-            <!-- Desktop links — hidden on mobile -->
-            <div class="hidden md:flex items-center gap-7">
-                <a href="#about"    class="nav-link">About</a>
-                <a href="#skills"   class="nav-link">Skills</a>
-                <a href="#services" class="nav-link">Services</a>
-                <a href="#work"     class="nav-link">Work</a>
-                <a href="#journey"  class="nav-link">Journey</a>
-                <a href="#contact"  class="nav-link">Contact</a>
-            </div>
-
-            <div class="flex items-center gap-3">
-                <!-- Theme toggle -->
-                <button onclick="toggleTheme()" class="theme-btn" title="Toggle light/dark mode" aria-label="Toggle theme"></button>
-
-                <a href="#contact" class="btn-primary hidden md:inline-flex">
-                    Let's Talk <i class="fa-solid fa-arrow-right text-xs"></i>
-                </a>
-                <!-- Hamburger — visible on mobile -->
-                <button onclick="toggleMob()" id="mob-btn" class="md:hidden glass rounded-xl p-2.5" style="color:var(--text)">
-                    <i class="fa-solid fa-bars" id="mob-icon"></i>
-                </button>
-            </div>
-        </div>
-    </nav>
-
-    <!-- Mobile menu — slides in from right, full-width on xs -->
-    <div id="mob-menu" class="fixed top-0 right-0 h-full w-full xs:w-72 sm:w-80 z-50 glass border-l flex flex-col p-8 pt-24" style="border-color:var(--border)">
-        <button onclick="toggleMob()" class="absolute top-5 right-5" style="color:var(--muted)"><i class="fa-solid fa-xmark text-xl"></i></button>
-        <div class="flex flex-col gap-5">
-            <a href="#about"    onclick="toggleMob()" class="text-base font-bold" style="color:var(--text)"><i class="fa-solid fa-user w-5 mr-2" style="color:var(--primary)"></i>About</a>
-            <a href="#skills"   onclick="toggleMob()" class="text-base font-bold" style="color:var(--text)"><i class="fa-solid fa-chart-bar w-5 mr-2" style="color:var(--primary)"></i>Skills</a>
-            <a href="#services" onclick="toggleMob()" class="text-base font-bold" style="color:var(--text)"><i class="fa-solid fa-briefcase w-5 mr-2" style="color:var(--primary)"></i>Services</a>
-            <a href="#work"     onclick="toggleMob()" class="text-base font-bold" style="color:var(--text)"><i class="fa-solid fa-code w-5 mr-2" style="color:var(--primary)"></i>Work</a>
-            <a href="#journey"  onclick="toggleMob()" class="text-base font-bold" style="color:var(--text)"><i class="fa-solid fa-timeline w-5 mr-2" style="color:var(--primary)"></i>Journey</a>
-            <a href="#contact"  onclick="toggleMob()" class="text-base font-bold" style="color:var(--text)"><i class="fa-solid fa-envelope w-5 mr-2" style="color:var(--primary)"></i>Contact</a>
-        </div>
-        <div class="mt-auto">
-            <a href="#contact" onclick="toggleMob()" class="btn-primary w-full">Let's Talk <i class="fa-solid fa-arrow-right text-xs"></i></a>
-        </div>
+<!-- ══════════════ NAV ══════════════ -->
+<nav id="nav" class="fixed top-0 w-full z-50 glass" style="background:rgba(9,9,15,.8)">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
+    <a href="#" class="flex items-center gap-2.5 z-10">
+      <div class="w-8 h-8 rounded-full overflow-hidden flex-shrink-0" style="border:2px solid var(--p)">
+        <img src="assets/profile.jpg" class="w-full h-full object-cover object-top" alt="Abdullahidev"/>
+      </div>
+      <span class="font-black text-sm" style="color:var(--text)">Abdullahi<span style="color:var(--p)">dev</span></span>
+    </a>
+    <div class="hidden md:flex items-center gap-6">
+      <a href="#about"   class="nl">About</a>
+      <a href="#skills"  class="nl">Skills</a>
+      <a href="#services" class="nl">Services</a>
+      <a href="#work"    class="nl">Work</a>
+      <a href="#journey" class="nl">Journey</a>
+      <a href="#contact" class="nl">Contact</a>
     </div>
-    <div id="mob-overlay" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 hidden" onclick="toggleMob()"></div>
+    <div class="flex items-center gap-2.5">
+      <button onclick="toggleTheme()" class="tog" aria-label="Toggle theme"></button>
+      <a href="#contact" class="btn-p hidden md:inline-flex" style="padding:10px 20px;font-size:10px">Let's Talk <i class="fa-solid fa-arrow-right text-xs"></i></a>
+      <button onclick="toggleMob()" class="md:hidden glass rounded-xl p-2.5" style="color:var(--text);border:1px solid var(--border)">
+        <i class="fa-solid fa-bars" id="mob-ico"></i>
+      </button>
+    </div>
+  </div>
+</nav>
 
-    <!-- ═══════════════════════ HERO ═══════════════════════ -->
-    <header class="relative min-h-screen flex items-center section-px pt-20 overflow-hidden">
-        <div class="absolute inset-0 grid-bg opacity-20 z-0"></div>
+<!-- Mobile menu -->
+<div id="mob" class="fixed top-0 right-0 h-full z-50 glass border-l flex flex-col p-6 pt-20" style="border-color:var(--border)">
+  <button onclick="toggleMob()" class="absolute top-5 right-5" style="color:var(--muted)"><i class="fa-solid fa-xmark text-lg"></i></button>
+  <div class="flex flex-col gap-5">
+    <a href="#about"    onclick="toggleMob()" class="font-bold" style="color:var(--text)"><i class="fa-solid fa-user mr-2" style="color:var(--p)"></i>About</a>
+    <a href="#skills"   onclick="toggleMob()" class="font-bold" style="color:var(--text)"><i class="fa-solid fa-chart-bar mr-2" style="color:var(--p)"></i>Skills</a>
+    <a href="#services" onclick="toggleMob()" class="font-bold" style="color:var(--text)"><i class="fa-solid fa-briefcase mr-2" style="color:var(--p)"></i>Services</a>
+    <a href="#work"     onclick="toggleMob()" class="font-bold" style="color:var(--text)"><i class="fa-solid fa-code mr-2" style="color:var(--p)"></i>Work</a>
+    <a href="#journey"  onclick="toggleMob()" class="font-bold" style="color:var(--text)"><i class="fa-solid fa-timeline mr-2" style="color:var(--p)"></i>Journey</a>
+    <a href="#contact"  onclick="toggleMob()" class="font-bold" style="color:var(--text)"><i class="fa-solid fa-envelope mr-2" style="color:var(--p)"></i>Contact</a>
+  </div>
+  <div class="mt-auto"><a href="#contact" onclick="toggleMob()" class="btn-p w-full justify-center">Let's Talk <i class="fa-solid fa-arrow-right text-xs"></i></a></div>
+</div>
+<div id="mob-ov" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 hidden" onclick="toggleMob()"></div>
 
-        <div class="max-w-7xl mx-auto w-full relative z-10">
-            <!-- Mobile: stack vertically; Desktop: side-by-side grid -->
-            <div class="flex flex-col items-center text-center md:text-left md:grid md:grid-cols-2 md:gap-14 md:items-center">
+<!-- ══════════════ HERO ══════════════ -->
+<header class="relative min-h-screen flex items-center px-4 sm:px-6 pt-20 overflow-hidden" style="z-index:1">
+  <div class="absolute inset-0 grid-bg opacity-20"></div>
+  <div class="max-w-7xl mx-auto w-full grid md:grid-cols-2 gap-10 md:gap-14 items-center py-12 md:py-0">
 
-                <!-- Left: text content -->
-                <div class="w-full">
-                    <!-- Badge -->
-                    <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full glass mb-6 reveal" style="border:1px solid rgba(34,197,94,0.25)">
-                        <span class="relative flex h-2.5 w-2.5">
-                            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-                            <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-green-500"></span>
-                        </span>
-                        <span style="font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:.18em;color:#4ade80">Available for Projects</span>
-                    </div>
+    <!-- Text — shown second on mobile (order-2), first on desktop -->
+    <div class="order-2 md:order-1 flex flex-col items-center md:items-start text-center md:text-left">
+      <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full glass mb-6 rev" style="border:1px solid rgba(34,197,94,.25)">
+        <span class="relative flex h-2.5 w-2.5"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span><span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-green-500"></span></span>
+        <span style="font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:.18em;color:#4ade80">Available for Projects</span>
+      </div>
 
-                    <h1 class="font-display font-black leading-[1.05] tracking-tight mb-6 reveal d1" style="font-size:clamp(2.2rem,7vw,5rem)">
-                        <span class="grad-white">Building</span><br/>
-                        <span style="color:var(--text)">Enterprise</span><br/>
-                        <span id="typed" style="color:var(--primary)">Systems</span>
-                    </h1>
+      <h1 class="font-black leading-[1.05] tracking-tight mb-5 rev d1" style="font-size:clamp(2.2rem,6vw,4.8rem)">
+        <span class="grad-h">Building</span><br/>
+        <span style="color:var(--text)">Enterprise</span><br/>
+        <span id="typed" style="color:var(--p)">Systems</span>
+      </h1>
 
-                    <p class="text-base sm:text-lg leading-relaxed font-light mb-8 reveal d2 mx-auto md:mx-0" style="color:var(--muted); max-width:480px; border-left:3px solid var(--primary); padding-left:18px; text-align:left">
-                        Senior Systems Architect &amp; SaaS Product Engineer crafting
-                        <strong style="color:var(--text)">scalable enterprise platforms</strong> — from property management to POS and e-commerce.
-                    </p>
+      <p class="leading-relaxed font-light mb-8 rev d2" style="font-size:clamp(.95rem,2.5vw,1.15rem);color:var(--muted);max-width:460px;border-left:3px solid var(--p);padding-left:16px">
+        Senior Systems Architect &amp; SaaS Product Engineer crafting <strong style="color:var(--text)">scalable enterprise platforms</strong> — from property management to POS and e-commerce.
+      </p>
 
-                    <!-- Buttons: full-width stacked on mobile, inline on sm+ -->
-                    <div class="flex flex-col sm:flex-row gap-3 sm:gap-4 mb-8 reveal d3 w-full sm:w-auto">
-                        <a href="#work" class="btn-primary btn-stack-mobile">
-                            <i class="fa-solid fa-eye"></i> View My Work
-                        </a>
-                        <a href="#contact" class="btn-ghost btn-stack-mobile">
-                            <i class="fa-solid fa-paper-plane"></i> Let's Talk
-                        </a>
-                    </div>
+      <div class="flex flex-wrap gap-3 mb-8 justify-center md:justify-start rev d3">
+        <a href="#work" class="btn-p mag-btn"><i class="fa-solid fa-eye"></i> View My Work</a>
+        <a href="#contact" class="btn-g mag-btn"><i class="fa-solid fa-paper-plane"></i> Let's Talk</a>
+      </div>
 
-                    <!-- Stack pills -->
-                    <div class="reveal d4 text-left">
-                        <p style="font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:.25em;color:var(--muted);margin-bottom:10px">Core Stack</p>
-                        <div class="flex flex-wrap gap-2 justify-start">
-                            <span class="tag"><i class="fa-brands fa-php mr-1"></i>PHP</span>
-                            <span class="tag"><i class="fa-brands fa-js mr-1"></i>TypeScript</span>
-                            <span class="tag"><i class="fa-solid fa-database mr-1"></i>MySQL</span>
-                            <span class="tag"><i class="fa-brands fa-react mr-1"></i>React</span>
-                            <span class="tag"><i class="fa-brands fa-laravel mr-1"></i>Laravel</span>
-                            <span class="tag"><i class="fa-brands fa-github mr-1"></i>CI/CD</span>
-                            <span class="tag"><i class="fa-brands fa-docker mr-1"></i>Docker</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Right: profile image + floating cards -->
-                <!-- On mobile: circular image, no floating cards; On md+: rounded-rect + floating cards visible -->
-                <div class="relative flex justify-center reveal d2 mt-10 md:mt-0 w-full">
-
-                    <!-- Mobile: circular profile image -->
-                    <div class="md:hidden flex justify-center">
-                        <div class="w-40 h-40 rounded-full overflow-hidden" style="border:3px solid var(--primary);box-shadow:0 0 32px rgba(139,92,246,0.35)">
-                            <img src="assets/profile.jpg" class="w-full h-full object-cover" alt="Abdullahidev"/>
-                        </div>
-                    </div>
-
-                    <!-- Desktop: rounded-rect profile + floating stat cards -->
-                    <div class="hidden md:block relative w-full max-w-[380px]">
-                        <!-- Main photo: rounded rectangle on desktop -->
-                        <div class="screenshot aspect-[3/4] relative group overflow-hidden" style="border-radius:28px;border:1px solid var(--border)">
-                            <img src="assets/profile.jpg" class="proj-img w-full h-full object-cover" alt="Abdullahidev"/>
-                            <div class="absolute inset-0" style="background:linear-gradient(to top, var(--bg) 0%, transparent 55%)"></div>
-                            <div class="absolute bottom-5 left-5 right-5">
-                                <p class="font-black text-xl" style="color:var(--text)">Abdullahi Mukhtar</p>
-                                <p style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.15em;color:var(--primary)">Senior Systems Architect</p>
-                            </div>
-                        </div>
-
-                        <!-- Floating: projects count -->
-                        <div class="float absolute -right-8 top-10 glass rounded-2xl p-4" style="border:1px solid var(--border)">
-                            <p class="font-black text-2xl" style="color:var(--text)">50+</p>
-                            <p style="font-size:9px;font-weight:900;text-transform:uppercase;letter-spacing:.15em;color:var(--primary)"><i class="fa-solid fa-rocket mr-1"></i>Projects</p>
-                        </div>
-                        <!-- Floating: CI/CD -->
-                        <div class="float absolute -left-8 bottom-28 glass rounded-2xl p-4" style="border:1px solid var(--border);animation-delay:-2.5s">
-                            <div class="flex items-center gap-2.5">
-                                <div class="w-9 h-9 rounded-xl flex items-center justify-center" style="background:rgba(139,92,246,.15);border:1px solid rgba(139,92,246,.3)">
-                                    <i class="fa-brands fa-github" style="color:var(--primary)"></i>
-                                </div>
-                                <div>
-                                    <p class="font-black text-sm" style="color:var(--text)">CI/CD</p>
-                                    <p style="font-size:8px;font-weight:700;text-transform:uppercase;color:var(--muted)">All Repos</p>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- Floating: open to work -->
-                        <div class="float absolute -right-4 bottom-10 glass rounded-xl p-3" style="border:1px solid rgba(34,197,94,.2);animation-delay:-4s">
-                            <div class="flex items-center gap-2">
-                                <span class="relative flex h-2 w-2"><span class="animate-ping absolute h-full w-full rounded-full bg-green-400 opacity-75"></span><span class="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span></span>
-                                <span style="font-size:9px;font-weight:900;text-transform:uppercase;letter-spacing:.15em;color:#4ade80">Open to Work</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+      <div class="rev d4">
+        <p style="font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:.25em;color:var(--muted);margin-bottom:8px">Core Stack</p>
+        <div class="flex flex-wrap gap-1.5 justify-center md:justify-start">
+          <span class="tag"><i class="fa-brands fa-php mr-1"></i>PHP</span>
+          <span class="tag"><i class="fa-brands fa-js mr-1"></i>TypeScript</span>
+          <span class="tag"><i class="fa-solid fa-database mr-1"></i>MySQL</span>
+          <span class="tag"><i class="fa-brands fa-react mr-1"></i>React</span>
+          <span class="tag"><i class="fa-brands fa-laravel mr-1"></i>Laravel</span>
+          <span class="tag"><i class="fa-brands fa-docker mr-1"></i>Docker</span>
         </div>
+      </div>
+    </div>
 
-        <!-- Scroll down indicator -->
-        <div class="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 cursor-pointer opacity-40 hover:opacity-90 transition-opacity" onclick="document.getElementById('about').scrollIntoView({behavior:'smooth'})">
-            <span style="font-size:9px;font-weight:900;text-transform:uppercase;letter-spacing:.4em;color:var(--muted)">Scroll</span>
-            <div style="width:1px;height:40px;background:linear-gradient(to bottom, var(--primary), transparent)"></div>
+    <!-- Profile image — shown first on mobile (order-1) -->
+    <div class="order-1 md:order-2 flex justify-center rev d2">
+      <div class="profile-wrap tilt-card" id="profile-tilt">
+        <!-- Mobile: circle, Desktop: rounded rectangle -->
+        <div class="relative">
+          <div class="glass rounded-[24px] md:rounded-[32px] overflow-hidden" style="border:1px solid var(--border);box-shadow:0 25px 80px rgba(139,92,246,.25)">
+            <img src="assets/profile.jpg" class="profile-img" alt="Abdullahidev"/>
+            <div class="absolute inset-0 hidden md:block" style="background:linear-gradient(to top,var(--bg) 0%,transparent 55%)"></div>
+            <!-- Name overlay desktop only -->
+            <div class="absolute bottom-5 left-5 right-5 hidden md:block">
+              <p class="font-black text-xl" style="color:var(--text)">Abdullahi Mukhtar</p>
+              <p style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.15em;color:var(--p)">Senior Systems Architect</p>
+            </div>
+          </div>
+
+          <!-- Floating cards — desktop only via .fc class -->
+          <div class="fc float absolute -right-10 top-8 glass rounded-2xl p-4" style="border:1px solid var(--border);box-shadow:0 8px 32px rgba(139,92,246,.2)">
+            <p class="font-black text-2xl" style="color:var(--text)">50+</p>
+            <p style="font-size:9px;font-weight:900;text-transform:uppercase;letter-spacing:.15em;color:var(--p)"><i class="fa-solid fa-rocket mr-1"></i>Projects</p>
+          </div>
+          <div class="fc float absolute -left-10 bottom-32 glass rounded-2xl p-4" style="border:1px solid var(--border);animation-delay:-2.5s">
+            <div class="flex items-center gap-2.5">
+              <div class="w-9 h-9 rounded-xl flex items-center justify-center" style="background:rgba(139,92,246,.15);border:1px solid rgba(139,92,246,.3)">
+                <i class="fa-brands fa-github" style="color:var(--p)"></i>
+              </div>
+              <div><p class="font-black text-sm" style="color:var(--text)">CI/CD</p><p style="font-size:8px;font-weight:700;text-transform:uppercase;color:var(--muted)">All Repos</p></div>
+            </div>
+          </div>
+          <div class="fc float absolute -right-6 bottom-10 glass rounded-xl p-3" style="border:1px solid rgba(34,197,94,.2);animation-delay:-4s">
+            <div class="flex items-center gap-2">
+              <span class="relative flex h-2 w-2"><span class="animate-ping absolute h-full w-full rounded-full bg-green-400 opacity-75"></span><span class="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span></span>
+              <span style="font-size:9px;font-weight:900;text-transform:uppercase;letter-spacing:.15em;color:#4ade80">Open to Work</span>
+            </div>
+          </div>
         </div>
-    </header>
+      </div>
+    </div>
+  </div>
 
-    <!-- ═══════════════════════ ABOUT ═══════════════════════ -->
-    <section id="about" class="section-py section-px">
-        <div class="max-w-7xl mx-auto">
-            <div class="reveal mb-10 md:mb-14">
-                <p class="section-label mb-2"><i class="fa-solid fa-user mr-2"></i>01 — About</p>
-                <h2 class="font-display font-black section-heading" style="color:var(--text)">Who I Am</h2>
-                <div style="height:3px;width:48px;background:linear-gradient(90deg,var(--primary),var(--cyan));border-radius:99px;margin-top:8px"></div>
-            </div>
+  <div class="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 cursor-pointer opacity-40 hover:opacity-90 transition-opacity hidden sm:flex" onclick="document.getElementById('about').scrollIntoView({behavior:'smooth'})">
+    <span style="font-size:9px;font-weight:900;text-transform:uppercase;letter-spacing:.4em;color:var(--muted)">Scroll</span>
+    <div style="width:1px;height:36px;background:linear-gradient(to bottom,var(--p),transparent)"></div>
+  </div>
+</header>
 
-            <!-- 1 col on mobile, 3 col on md -->
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <!-- Story -->
-                <div class="glass card-hover rounded-3xl p-6 md:p-8 md:col-span-2 reveal" style="border:1px solid var(--border)">
-                    <div class="flex items-center gap-3 mb-6">
-                        <div class="w-11 h-11 rounded-2xl flex items-center justify-center flex-shrink-0" style="background:rgba(139,92,246,.12);border:1px solid rgba(139,92,246,.25)">
-                            <i class="fa-solid fa-code" style="color:var(--primary)"></i>
-                        </div>
-                        <h3 class="font-black text-xl" style="color:var(--text)">My Story</h3>
-                    </div>
-                    <p class="leading-relaxed text-base mb-4" style="color:var(--muted)">
-                        I'm a <strong style="color:var(--text)">Senior Systems Architect & SaaS Product Engineer</strong> passionate about building enterprise-grade platforms that solve real business problems. From database architecture to CI/CD pipelines — I handle the full stack.
-                    </p>
-                    <p class="leading-relaxed text-base" style="color:var(--muted)">
-                        My portfolio covers <strong style="color:var(--text)">Property Management SaaS</strong>, Restaurant POS, Hospital Management, and E-commerce — all built with clean MVC architecture and automated deployment pipelines.
-                    </p>
-                    <div class="flex flex-wrap gap-2 mt-7">
-                        <span class="tag" style="color:var(--primary);border-color:rgba(139,92,246,.3)">#SaaS</span>
-                        <span class="tag" style="color:var(--primary);border-color:rgba(139,92,246,.3)">#SystemsArchitecture</span>
-                        <span class="tag" style="color:var(--primary);border-color:rgba(139,92,246,.3)">#EnterpriseDev</span>
-                        <span class="tag" style="color:var(--primary);border-color:rgba(139,92,246,.3)">#CI/CD</span>
-                        <span class="tag" style="color:var(--primary);border-color:rgba(139,92,246,.3)">#MVC</span>
-                    </div>
-                </div>
-
-                <!-- Tech Stack -->
-                <div class="glass card-hover rounded-3xl p-6 md:p-8 reveal d1" style="border:1px solid var(--border)">
-                    <div class="flex items-center gap-3 mb-6">
-                        <div class="w-11 h-11 rounded-2xl flex items-center justify-center flex-shrink-0" style="background:rgba(6,182,212,.1);border:1px solid rgba(6,182,212,.25)">
-                            <i class="fa-solid fa-layer-group" style="color:var(--cyan)"></i>
-                        </div>
-                        <h3 class="font-black text-xl" style="color:var(--text)">Tech Stack</h3>
-                    </div>
-                    <div class="space-y-4">
-                        <div class="flex justify-between py-2" style="border-bottom:1px solid var(--border)">
-                            <span style="color:var(--muted);font-size:13px"><i class="fa-brands fa-php mr-2" style="color:var(--primary)"></i>Backend</span>
-                            <span class="font-bold text-sm" style="color:var(--text)">PHP, Laravel</span>
-                        </div>
-                        <div class="flex justify-between py-2" style="border-bottom:1px solid var(--border)">
-                            <span style="color:var(--muted);font-size:13px"><i class="fa-brands fa-react mr-2" style="color:var(--cyan)"></i>Frontend</span>
-                            <span class="font-bold text-sm" style="color:var(--text)">TypeScript, React</span>
-                        </div>
-                        <div class="flex justify-between py-2" style="border-bottom:1px solid var(--border)">
-                            <span style="color:var(--muted);font-size:13px"><i class="fa-solid fa-database mr-2" style="color:var(--primary)"></i>Database</span>
-                            <span class="font-bold text-sm" style="color:var(--text)">MySQL, PostgreSQL</span>
-                        </div>
-                        <div class="flex justify-between py-2" style="border-bottom:1px solid var(--border)">
-                            <span style="color:var(--muted);font-size:13px"><i class="fa-brands fa-github mr-2" style="color:var(--cyan)"></i>DevOps</span>
-                            <span class="font-bold text-sm" style="color:var(--text)">Actions, Docker</span>
-                        </div>
-                        <div class="flex justify-between py-2">
-                            <span style="color:var(--muted);font-size:13px"><i class="fa-solid fa-server mr-2" style="color:var(--primary)"></i>Hosting</span>
-                            <span class="font-bold text-sm" style="color:var(--text)">Vercel, VPS, cPanel</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Stats: 2x2 on mobile, 4x1 on desktop -->
-                <div class="glass rounded-3xl p-6 md:p-8 md:col-span-3 reveal d2" style="border:1px solid var(--border)">
-                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-6 text-center">
-                        <div>
-                            <p class="font-black" style="font-size:2.5rem;color:var(--text)" data-count="50" data-suffix="+">0+</p>
-                            <p style="font-size:9px;font-weight:900;text-transform:uppercase;letter-spacing:.18em;color:var(--muted)"><i class="fa-solid fa-rocket mr-1" style="color:var(--primary)"></i>Projects Built</p>
-                        </div>
-                        <div class="stat-border" style="border-left:1px solid var(--border)">
-                            <p class="font-black" style="font-size:2.5rem;color:var(--text)" data-count="8" data-suffix="+">0+</p>
-                            <p style="font-size:9px;font-weight:900;text-transform:uppercase;letter-spacing:.18em;color:var(--muted)"><i class="fa-solid fa-calendar mr-1" style="color:var(--cyan)"></i>Years Experience</p>
-                        </div>
-                        <div class="stat-border stat-border-mobile" style="border-left:1px solid var(--border)">
-                            <p class="font-black" style="font-size:2.5rem;color:var(--text)" data-count="15" data-suffix="+">0+</p>
-                            <p style="font-size:9px;font-weight:900;text-transform:uppercase;letter-spacing:.18em;color:var(--muted)"><i class="fa-solid fa-building mr-1" style="color:var(--primary)"></i>Enterprise Clients</p>
-                        </div>
-                        <div class="stat-border stat-border-mobile" style="border-left:1px solid var(--border)">
-                            <p class="font-black" style="font-size:2.5rem;color:var(--text)" data-count="99" data-suffix="%">0%</p>
-                            <p style="font-size:9px;font-weight:900;text-transform:uppercase;letter-spacing:.18em;color:var(--muted)"><i class="fa-solid fa-shield mr-1" style="color:var(--cyan)"></i>Uptime Delivered</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
+<!-- ══════════════ ABOUT ══════════════ -->
+<section id="about" class="sec relative" style="z-index:1">
+  <div class="max-w-7xl mx-auto">
+    <div class="rev mb-10">
+      <p class="sec-lbl mb-1"><i class="fa-solid fa-user mr-2"></i>01 — About</p>
+      <h2 class="sec-h">Who I Am</h2>
+      <div class="sec-line"></div>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+      <!-- Story -->
+      <div class="glass proj rounded-3xl p-6 md:p-8 md:col-span-2 rev" style="border:1px solid var(--border)">
+        <div class="flex items-center gap-3 mb-5">
+          <div class="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0" style="background:rgba(139,92,246,.12);border:1px solid rgba(139,92,246,.25)"><i class="fa-solid fa-code" style="color:var(--p)"></i></div>
+          <h3 class="font-black text-lg" style="color:var(--text)">My Story</h3>
         </div>
-    </section>
-
-    <!-- ═══════════════════════ SKILLS ═══════════════════════ -->
-    <section id="skills" class="section-py section-px bg-black/10">
-        <div class="max-w-7xl mx-auto">
-            <div class="reveal mb-10 md:mb-14">
-                <p class="section-label mb-2"><i class="fa-solid fa-chart-bar mr-2"></i>02 — Skills</p>
-                <h2 class="font-display font-black section-heading" style="color:var(--text)">Technical Proficiency</h2>
-                <div style="height:3px;width:48px;background:linear-gradient(90deg,var(--primary),var(--cyan));border-radius:99px;margin-top:8px"></div>
-            </div>
-            <!-- 1 col on mobile, 2 col on md -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div class="glass card-hover rounded-3xl p-6 md:p-8 reveal" style="border:1px solid var(--border)">
-                    <h3 class="font-black text-lg mb-8 flex items-center gap-3" style="color:var(--text)">
-                        <span class="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0" style="background:rgba(139,92,246,.12);border:1px solid rgba(139,92,246,.25)">
-                            <i class="fa-solid fa-server" style="color:var(--primary);font-size:14px"></i>
-                        </span>
-                        Backend & Database
-                    </h3>
-                    <div class="space-y-5">
-                        <div><div class="flex justify-between mb-1.5"><span class="text-sm font-bold" style="color:var(--text)"><i class="fa-brands fa-php mr-2" style="color:var(--primary)"></i>PHP / Laravel</span><span class="text-sm font-black" style="color:var(--primary)">90%</span></div><div class="bar-track"><div class="bar-fill" data-w="90"></div></div></div>
-                        <div><div class="flex justify-between mb-1.5"><span class="text-sm font-bold" style="color:var(--text)"><i class="fa-solid fa-database mr-2" style="color:var(--cyan)"></i>MySQL / PostgreSQL</span><span class="text-sm font-black" style="color:var(--primary)">85%</span></div><div class="bar-track"><div class="bar-fill" data-w="85"></div></div></div>
-                        <div><div class="flex justify-between mb-1.5"><span class="text-sm font-bold" style="color:var(--text)"><i class="fa-solid fa-plug mr-2" style="color:var(--primary)"></i>REST API Design</span><span class="text-sm font-black" style="color:var(--primary)">88%</span></div><div class="bar-track"><div class="bar-fill" data-w="88"></div></div></div>
-                        <div><div class="flex justify-between mb-1.5"><span class="text-sm font-bold" style="color:var(--text)"><i class="fa-solid fa-sitemap mr-2" style="color:var(--cyan)"></i>System Architecture</span><span class="text-sm font-black" style="color:var(--primary)">92%</span></div><div class="bar-track"><div class="bar-fill" data-w="92"></div></div></div>
-                    </div>
-                </div>
-                <div class="glass card-hover rounded-3xl p-6 md:p-8 reveal d1" style="border:1px solid var(--border)">
-                    <h3 class="font-black text-lg mb-8 flex items-center gap-3" style="color:var(--text)">
-                        <span class="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0" style="background:rgba(6,182,212,.1);border:1px solid rgba(6,182,212,.25)">
-                            <i class="fa-solid fa-globe" style="color:var(--cyan);font-size:14px"></i>
-                        </span>
-                        Frontend & DevOps
-                    </h3>
-                    <div class="space-y-5">
-                        <div><div class="flex justify-between mb-1.5"><span class="text-sm font-bold" style="color:var(--text)"><i class="fa-brands fa-react mr-2" style="color:var(--cyan)"></i>TypeScript / React</span><span class="text-sm font-black" style="color:var(--primary)">82%</span></div><div class="bar-track"><div class="bar-fill" data-w="82"></div></div></div>
-                        <div><div class="flex justify-between mb-1.5"><span class="text-sm font-bold" style="color:var(--text)"><i class="fa-brands fa-github mr-2" style="color:var(--primary)"></i>CI/CD GitHub Actions</span><span class="text-sm font-black" style="color:var(--primary)">78%</span></div><div class="bar-track"><div class="bar-fill" data-w="78"></div></div></div>
-                        <div><div class="flex justify-between mb-1.5"><span class="text-sm font-bold" style="color:var(--text)"><i class="fa-brands fa-docker mr-2" style="color:var(--cyan)"></i>Docker / Linux</span><span class="text-sm font-black" style="color:var(--primary)">70%</span></div><div class="bar-track"><div class="bar-fill" data-w="70"></div></div></div>
-                        <div><div class="flex justify-between mb-1.5"><span class="text-sm font-bold" style="color:var(--text)"><i class="fa-brands fa-git-alt mr-2" style="color:var(--primary)"></i>Git Workflow</span><span class="text-sm font-black" style="color:var(--primary)">88%</span></div><div class="bar-track"><div class="bar-fill" data-w="88"></div></div></div>
-                    </div>
-                </div>
-            </div>
+        <p class="leading-relaxed text-sm md:text-base mb-4" style="color:var(--muted)">I'm a <strong style="color:var(--text)">Senior Systems Architect & SaaS Product Engineer</strong> passionate about building enterprise-grade platforms. From database architecture to CI/CD pipelines — I handle the full stack.</p>
+        <p class="leading-relaxed text-sm md:text-base" style="color:var(--muted)">My portfolio covers <strong style="color:var(--text)">Property Management SaaS</strong>, Restaurant POS, Hospital Management, and E-commerce — all with clean MVC architecture and automated pipelines.</p>
+        <div class="flex flex-wrap gap-2 mt-6">
+          <span class="tag" style="color:var(--p);border-color:rgba(139,92,246,.3)">#SaaS</span>
+          <span class="tag" style="color:var(--p);border-color:rgba(139,92,246,.3)">#Architecture</span>
+          <span class="tag" style="color:var(--p);border-color:rgba(139,92,246,.3)">#EnterpriseDev</span>
+          <span class="tag" style="color:var(--p);border-color:rgba(139,92,246,.3)">#CI/CD</span>
         </div>
-    </section>
-
-    <!-- ═══════════════════════ SERVICES ═══════════════════════ -->
-    <section id="services" class="section-py section-px">
-        <div class="max-w-7xl mx-auto">
-            <div class="text-center reveal mb-10 md:mb-14">
-                <p class="section-label mb-2"><i class="fa-solid fa-briefcase mr-2"></i>03 — Services</p>
-                <h2 class="font-display font-black section-heading" style="color:var(--text)">What I Build</h2>
-                <div style="height:3px;width:48px;background:linear-gradient(90deg,var(--primary),var(--cyan));border-radius:99px;margin:8px auto 0"></div>
-                <p class="mt-5 max-w-lg mx-auto text-base" style="color:var(--muted)">Enterprise solutions built with clean architecture and automated pipelines.</p>
-            </div>
-            <!-- 1 col mobile, 2 col sm, 3 col lg -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                <div class="glass card-hover rounded-3xl p-6 md:p-8 reveal" style="border:1px solid var(--border)">
-                    <div class="w-14 h-14 rounded-2xl flex items-center justify-center mb-5" style="background:rgba(139,92,246,.1);border:1px solid rgba(139,92,246,.2)">
-                        <i class="fa-solid fa-building text-2xl" style="color:var(--primary)"></i>
-                    </div>
-                    <h3 class="font-black text-base mb-3 uppercase tracking-wide" style="color:var(--text)">SaaS Platforms</h3>
-                    <p class="text-sm leading-relaxed" style="color:var(--muted)">Multi-tenant SaaS systems with subscription billing, role-based access, automated invoicing, and real-time dashboards.</p>
-                </div>
-                <div class="glass card-hover rounded-3xl p-6 md:p-8 reveal d1" style="border:1px solid var(--border)">
-                    <div class="w-14 h-14 rounded-2xl flex items-center justify-center mb-5" style="background:rgba(6,182,212,.08);border:1px solid rgba(6,182,212,.2)">
-                        <i class="fa-solid fa-cash-register text-2xl" style="color:var(--cyan)"></i>
-                    </div>
-                    <h3 class="font-black text-base mb-3 uppercase tracking-wide" style="color:var(--text)">POS Systems</h3>
-                    <p class="text-sm leading-relaxed" style="color:var(--muted)">Custom point-of-sale for restaurants & retail — order management, billing, inventory control, and live reporting.</p>
-                </div>
-                <div class="glass card-hover rounded-3xl p-6 md:p-8 reveal d2" style="border:1px solid var(--border)">
-                    <div class="w-14 h-14 rounded-2xl flex items-center justify-center mb-5" style="background:rgba(139,92,246,.1);border:1px solid rgba(139,92,246,.2)">
-                        <i class="fa-brands fa-github text-2xl" style="color:var(--primary)"></i>
-                    </div>
-                    <h3 class="font-black text-base mb-3 uppercase tracking-wide" style="color:var(--text)">CI/CD Automation</h3>
-                    <p class="text-sm leading-relaxed" style="color:var(--muted)">GitHub Actions pipelines, automated testing, syntax checks, security audits, and deployment workflows on every push.</p>
-                </div>
-                <div class="glass card-hover rounded-3xl p-6 md:p-8 reveal d1" style="border:1px solid var(--border)">
-                    <div class="w-14 h-14 rounded-2xl flex items-center justify-center mb-5" style="background:rgba(6,182,212,.08);border:1px solid rgba(6,182,212,.2)">
-                        <i class="fa-solid fa-cart-shopping text-2xl" style="color:var(--cyan)"></i>
-                    </div>
-                    <h3 class="font-black text-base mb-3 uppercase tracking-wide" style="color:var(--text)">E-Commerce</h3>
-                    <p class="text-sm leading-relaxed" style="color:var(--muted)">Modern e-commerce platforms with TypeScript & React — product catalog, cart, order tracking, and payment integration.</p>
-                </div>
-                <div class="glass card-hover rounded-3xl p-6 md:p-8 reveal d2" style="border:1px solid var(--border)">
-                    <div class="w-14 h-14 rounded-2xl flex items-center justify-center mb-5" style="background:rgba(139,92,246,.1);border:1px solid rgba(139,92,246,.2)">
-                        <i class="fa-solid fa-database text-2xl" style="color:var(--primary)"></i>
-                    </div>
-                    <h3 class="font-black text-base mb-3 uppercase tracking-wide" style="color:var(--text)">Database Design</h3>
-                    <p class="text-sm leading-relaxed" style="color:var(--muted)">Optimized MySQL & PostgreSQL schemas, query tuning, migrations, and data integrity architecture for enterprise systems.</p>
-                </div>
-                <div class="glass card-hover rounded-3xl p-6 md:p-8 reveal d3" style="border:1px solid var(--border)">
-                    <div class="w-14 h-14 rounded-2xl flex items-center justify-center mb-5" style="background:rgba(6,182,212,.08);border:1px solid rgba(6,182,212,.2)">
-                        <i class="fa-solid fa-hospital text-2xl" style="color:var(--cyan)"></i>
-                    </div>
-                    <h3 class="font-black text-base mb-3 uppercase tracking-wide" style="color:var(--text)">Management Systems</h3>
-                    <p class="text-sm leading-relaxed" style="color:var(--muted)">Hospital, property, and business management systems with full operational control and workflow automation.</p>
-                </div>
-            </div>
+      </div>
+      <!-- Stack -->
+      <div class="glass proj rounded-3xl p-6 md:p-8 rev d1" style="border:1px solid var(--border)">
+        <div class="flex items-center gap-3 mb-5">
+          <div class="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0" style="background:rgba(6,182,212,.1);border:1px solid rgba(6,182,212,.25)"><i class="fa-solid fa-layer-group" style="color:var(--c)"></i></div>
+          <h3 class="font-black text-lg" style="color:var(--text)">Stack</h3>
         </div>
-    </section>
-
-    <!-- ═══════════════════════ PROJECTS ═══════════════════════ -->
-    <section id="work" class="section-py section-px relative" style="background:rgba(0,0,0,0.12)">
-        <div class="absolute inset-0 grid-bg opacity-15"></div>
-        <div class="max-w-7xl mx-auto relative z-10">
-            <div class="text-center reveal mb-10 md:mb-14">
-                <p class="section-label mb-2"><i class="fa-solid fa-code mr-2"></i>04 — Work</p>
-                <h2 class="font-display font-black section-heading" style="color:var(--text)">Featured Projects</h2>
-                <div style="height:3px;width:48px;background:linear-gradient(90deg,var(--primary),var(--cyan));border-radius:99px;margin:8px auto 0"></div>
-            </div>
-
-            <!-- Big featured project: image on top / text below on mobile; side-by-side on lg -->
-            <div class="glass proj-card card-hover rounded-3xl overflow-hidden mb-8 reveal" style="border:1px solid var(--border)">
-                <div class="flex flex-col lg:grid lg:grid-cols-2 lg:gap-0">
-                    <!-- Screenshot -->
-                    <div class="relative overflow-hidden" style="height:260px">
-                        <img src="assets/property_management_mockup.png" class="proj-img" alt="Property Management SaaS"/>
-                        <div class="absolute inset-0" style="background:linear-gradient(135deg, rgba(139,92,246,0.3) 0%, transparent 60%)"></div>
-                        <span class="absolute top-5 left-5 btn-primary" style="font-size:9px;padding:6px 14px;border-radius:8px">
-                            <i class="fa-solid fa-star mr-1"></i> Featured
-                        </span>
-                    </div>
-                    <!-- Info -->
-                    <div class="p-6 md:p-10 flex flex-col justify-center">
-                        <div class="flex items-center gap-3 mb-4">
-                            <div class="w-12 h-12 rounded-2xl flex items-center justify-center flex-shrink-0" style="background:rgba(139,92,246,.12);border:1px solid rgba(139,92,246,.25)">
-                                <i class="fa-solid fa-building text-xl" style="color:var(--primary)"></i>
-                            </div>
-                            <div>
-                                <h3 class="font-black text-lg md:text-xl" style="color:var(--text)">Property Management SaaS</h3>
-                                <p style="font-size:11px;color:var(--primary);font-weight:700">Enterprise Real Estate Platform</p>
-                            </div>
-                        </div>
-                        <p class="text-sm leading-relaxed mb-6" style="color:var(--muted)">Full-cycle property management platform — tenant lifecycle, lease tracking, automated invoicing, expense monitoring per unit, and real-time financial reporting. Includes CI/CD pipeline with GitHub Actions.</p>
-                        <div class="flex flex-wrap gap-2 mb-6">
-                            <span class="tag"><i class="fa-brands fa-php mr-1"></i>PHP</span>
-                            <span class="tag"><i class="fa-solid fa-database mr-1"></i>MySQL</span>
-                            <span class="tag">MVC</span>
-                            <span class="tag"><i class="fa-brands fa-github mr-1"></i>CI/CD</span>
-                        </div>
-                        <div class="flex gap-3">
-                            <a href="https://github.com/Abdullahi0720006477/Property-Management-System-SaaS" target="_blank" class="btn-primary" style="font-size:10px;padding:10px 20px">
-                                <i class="fa-brands fa-github"></i> View on GitHub
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Row 2: 3 cards — 1 col mobile, 3 col lg -->
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
-                <!-- Restaurant POS -->
-                <div class="glass proj-card card-hover rounded-3xl overflow-hidden reveal" style="border:1px solid var(--border)">
-                    <div class="relative overflow-hidden" style="height:200px">
-                        <img src="assets/anfac_pos.jpg" class="proj-img" alt="Restaurant POS"/>
-                        <div class="absolute inset-0" style="background:linear-gradient(to top, var(--bg) 0%, transparent 60%)"></div>
-                        <div class="absolute top-3 left-3">
-                            <span class="tag"><i class="fa-solid fa-cash-register mr-1" style="color:var(--cyan)"></i>POS System</span>
-                        </div>
-                    </div>
-                    <div class="p-6">
-                        <div class="flex items-start justify-between mb-2">
-                            <h3 class="font-black text-base" style="color:var(--text)">Restaurant POS System</h3>
-                            <a href="https://github.com/Abdullahi0720006477/Restaurant-POS-System" target="_blank" style="color:var(--muted)"><i class="fa-solid fa-arrow-up-right-from-square"></i></a>
-                        </div>
-                        <p class="text-xs leading-relaxed mb-4" style="color:var(--muted)">Order management, billing, menu & inventory control for high-volume restaurants.</p>
-                        <div class="flex flex-wrap gap-1.5">
-                            <span class="tag"><i class="fa-brands fa-php mr-1"></i>PHP</span>
-                            <span class="tag"><i class="fa-solid fa-database mr-1"></i>MySQL</span>
-                            <span class="tag"><i class="fa-brands fa-github mr-1"></i>CI/CD</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Coffee POS -->
-                <div class="glass proj-card card-hover rounded-3xl overflow-hidden reveal d1" style="border:1px solid var(--border)">
-                    <div class="relative overflow-hidden" style="height:200px">
-                        <img src="assets/coffee_pos_mockup.png" class="proj-img" alt="Coffee POS"/>
-                        <div class="absolute inset-0" style="background:linear-gradient(to top, var(--bg) 0%, transparent 60%)"></div>
-                        <div class="absolute top-3 left-3">
-                            <span class="tag"><i class="fa-solid fa-mug-hot mr-1" style="color:var(--primary)"></i>FinTech POS</span>
-                        </div>
-                    </div>
-                    <div class="p-6">
-                        <div class="flex items-start justify-between mb-2">
-                            <h3 class="font-black text-base" style="color:var(--text)">ANFAC Coffee House POS</h3>
-                            <a href="https://github.com/Abdullahi0720006477" target="_blank" style="color:var(--muted)"><i class="fa-solid fa-arrow-up-right-from-square"></i></a>
-                        </div>
-                        <p class="text-xs leading-relaxed mb-4" style="color:var(--muted)">FinTech point-of-sale system with loyalty features for high-volume coffee retailers.</p>
-                        <div class="flex flex-wrap gap-1.5">
-                            <span class="tag"><i class="fa-brands fa-laravel mr-1"></i>Laravel</span>
-                            <span class="tag"><i class="fa-solid fa-database mr-1"></i>MySQL</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Hospital Management -->
-                <div class="glass proj-card card-hover rounded-3xl overflow-hidden reveal d2" style="border:1px solid var(--border)">
-                    <div class="relative overflow-hidden" style="height:200px">
-                        <img src="assets/school_management_mockup.png" class="proj-img" alt="Management System"/>
-                        <div class="absolute inset-0" style="background:linear-gradient(to top, var(--bg) 0%, transparent 60%)"></div>
-                        <div class="absolute top-3 left-3">
-                            <span class="tag"><i class="fa-solid fa-hospital mr-1" style="color:var(--cyan)"></i>Management</span>
-                        </div>
-                    </div>
-                    <div class="p-6">
-                        <div class="flex items-start justify-between mb-2">
-                            <h3 class="font-black text-base" style="color:var(--text)">Hospital Management System</h3>
-                            <a href="https://github.com/Abdullahi0720006477/Hospital-Management-System" target="_blank" style="color:var(--muted)"><i class="fa-solid fa-arrow-up-right-from-square"></i></a>
-                        </div>
-                        <p class="text-xs leading-relaxed mb-4" style="color:var(--muted)">Patient records, appointments & full staff management platform with CI/CD.</p>
-                        <div class="flex flex-wrap gap-1.5">
-                            <span class="tag"><i class="fa-brands fa-php mr-1"></i>PHP</span>
-                            <span class="tag">Twig</span>
-                            <span class="tag"><i class="fa-brands fa-github mr-1"></i>CI/CD</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Row 3: 2 cards — 1 col mobile, 2 col md -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <!-- Grocery -->
-                <div class="glass proj-card card-hover rounded-3xl overflow-hidden reveal" style="border:1px solid var(--border)">
-                    <div class="flex flex-col sm:grid sm:grid-cols-2 gap-0">
-                        <div class="relative overflow-hidden" style="height:180px">
-                            <div class="w-full h-full flex items-center justify-center" style="background:linear-gradient(135deg,rgba(6,182,212,.15),rgba(139,92,246,.1))">
-                                <i class="fa-solid fa-basket-shopping" style="font-size:4rem;color:var(--cyan);opacity:.5"></i>
-                            </div>
-                        </div>
-                        <div class="p-6">
-                            <div class="flex items-start justify-between mb-2">
-                                <h3 class="font-black text-base" style="color:var(--text)">Hallo Fresh Grocery</h3>
-                                <a href="https://github.com/Abdullahi0720006477/Hallo-Fresh-Grocery" target="_blank" style="color:var(--muted)"><i class="fa-solid fa-arrow-up-right-from-square"></i></a>
-                            </div>
-                            <p class="text-xs leading-relaxed mb-4" style="color:var(--muted)">Modern grocery delivery platform — product catalog, cart & order tracking.</p>
-                            <div class="flex flex-wrap gap-1.5">
-                                <span class="tag"><i class="fa-brands fa-react mr-1"></i>React</span>
-                                <span class="tag"><i class="fa-brands fa-js mr-1"></i>TypeScript</span>
-                                <span class="tag"><i class="fa-brands fa-github mr-1"></i>CI/CD</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Marso Electronics -->
-                <div class="glass proj-card card-hover rounded-3xl overflow-hidden reveal d1" style="border:1px solid var(--border)">
-                    <div class="flex flex-col sm:grid sm:grid-cols-2 gap-0">
-                        <div class="relative overflow-hidden" style="height:180px">
-                            <div class="w-full h-full flex items-center justify-center" style="background:linear-gradient(135deg,rgba(139,92,246,.15),rgba(6,182,212,.1))">
-                                <i class="fa-solid fa-microchip" style="font-size:4rem;color:var(--primary);opacity:.5"></i>
-                            </div>
-                        </div>
-                        <div class="p-6">
-                            <div class="flex items-start justify-between mb-2">
-                                <h3 class="font-black text-base" style="color:var(--text)">Marso Electronics</h3>
-                                <a href="https://github.com/Abdullahi0720006477/Marso-Electronics" target="_blank" style="color:var(--muted)"><i class="fa-solid fa-arrow-up-right-from-square"></i></a>
-                            </div>
-                            <p class="text-xs leading-relaxed mb-4" style="color:var(--muted)">E-commerce platform for electronics — product listings, cart & checkout system.</p>
-                            <div class="flex flex-wrap gap-1.5">
-                                <span class="tag"><i class="fa-brands fa-react mr-1"></i>React</span>
-                                <span class="tag"><i class="fa-brands fa-js mr-1"></i>TypeScript</span>
-                                <span class="tag"><i class="fa-brands fa-github mr-1"></i>CI/CD</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="flex justify-center mt-10 reveal">
-                <a href="https://github.com/Abdullahi0720006477" target="_blank" class="btn-ghost">
-                    <i class="fa-brands fa-github"></i> View All Projects on GitHub
-                </a>
-            </div>
+        <div class="space-y-3 text-sm">
+          <div class="flex justify-between py-2" style="border-bottom:1px solid var(--border)"><span style="color:var(--muted)"><i class="fa-brands fa-php mr-2" style="color:var(--p)"></i>Backend</span><span class="font-bold" style="color:var(--text)">PHP, Laravel</span></div>
+          <div class="flex justify-between py-2" style="border-bottom:1px solid var(--border)"><span style="color:var(--muted)"><i class="fa-brands fa-react mr-2" style="color:var(--c)"></i>Frontend</span><span class="font-bold" style="color:var(--text)">TypeScript, React</span></div>
+          <div class="flex justify-between py-2" style="border-bottom:1px solid var(--border)"><span style="color:var(--muted)"><i class="fa-solid fa-database mr-2" style="color:var(--p)"></i>Database</span><span class="font-bold" style="color:var(--text)">MySQL, Postgres</span></div>
+          <div class="flex justify-between py-2" style="border-bottom:1px solid var(--border)"><span style="color:var(--muted)"><i class="fa-brands fa-github mr-2" style="color:var(--c)"></i>DevOps</span><span class="font-bold" style="color:var(--text)">Actions, Docker</span></div>
+          <div class="flex justify-between py-2"><span style="color:var(--muted)"><i class="fa-solid fa-server mr-2" style="color:var(--p)"></i>Hosting</span><span class="font-bold" style="color:var(--text)">Vercel, VPS</span></div>
         </div>
-    </section>
-
-    <!-- ═══════════════════════ JOURNEY ═══════════════════════ -->
-    <section id="journey" class="section-py section-px">
-        <div class="max-w-4xl mx-auto">
-            <div class="text-center reveal mb-10 md:mb-14">
-                <p class="section-label mb-2"><i class="fa-solid fa-timeline mr-2"></i>05 — Journey</p>
-                <h2 class="font-display font-black section-heading" style="color:var(--text)">My Journey</h2>
-                <div style="height:3px;width:48px;background:linear-gradient(90deg,var(--primary),var(--cyan));border-radius:99px;margin:8px auto 0"></div>
-            </div>
-            <div class="relative space-y-10 md:space-y-14" style="border-left:2px solid var(--border);margin-left:1rem md:1.5rem">
-                <div class="relative pl-7 md:pl-10 group reveal">
-                    <span class="absolute -left-[11px] top-1.5 w-5 h-5 rounded-full flex-shrink-0" style="background:var(--primary);border:3px solid var(--bg);box-shadow:0 0 18px rgba(139,92,246,.7)"></span>
-                    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-3">
-                        <h3 class="font-black text-lg md:text-xl" style="color:var(--text)"><i class="fa-solid fa-crown mr-2" style="color:var(--primary)"></i>Senior Systems Architect</h3>
-                        <span class="tag mt-2 sm:mt-0 w-fit" style="color:var(--primary);border-color:rgba(139,92,246,.3)">2021 – Present</span>
-                    </div>
-                    <p class="font-bold text-sm mb-2" style="color:var(--primary)">Enterprise SaaS & Systems</p>
-                    <p class="text-sm leading-relaxed" style="color:var(--muted)">Designing enterprise SaaS platforms — Property Management, Hospital Systems, POS — with full CI/CD pipelines, MVC architecture, and automated deployments.</p>
-                </div>
-                <div class="relative pl-7 md:pl-10 group reveal d1">
-                    <span class="absolute -left-[11px] top-1.5 w-5 h-5 rounded-full transition-all duration-300" style="background:var(--surface);border:3px solid var(--border)"></span>
-                    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-3">
-                        <h3 class="font-black text-lg md:text-xl" style="color:var(--text)"><i class="fa-solid fa-code mr-2" style="color:var(--muted)"></i>Full-Stack Developer</h3>
-                        <span class="tag mt-2 sm:mt-0 w-fit">2018 – 2021</span>
-                    </div>
-                    <p class="font-bold text-sm mb-2" style="color:var(--muted)">Digital Agency & Freelance</p>
-                    <p class="text-sm leading-relaxed" style="color:var(--muted)">Built custom web apps for diverse clients in e-commerce, logistics, and healthcare. Optimized database queries improving performance by 40%.</p>
-                </div>
-                <div class="relative pl-7 md:pl-10 group reveal d2">
-                    <span class="absolute -left-[11px] top-1.5 w-5 h-5 rounded-full transition-all duration-300" style="background:var(--surface);border:3px solid var(--border)"></span>
-                    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-3">
-                        <h3 class="font-black text-lg md:text-xl" style="color:var(--text)"><i class="fa-solid fa-seedling mr-2" style="color:var(--muted)"></i>Junior Web Developer</h3>
-                        <span class="tag mt-2 sm:mt-0 w-fit">2016 – 2018</span>
-                    </div>
-                    <p class="font-bold text-sm mb-2" style="color:var(--muted)">Freelance & Contract</p>
-                    <p class="text-sm leading-relaxed" style="color:var(--muted)">Started building responsive websites and e-commerce stores for local businesses, laying the foundation in PHP, HTML, CSS, and JavaScript.</p>
-                </div>
-            </div>
+      </div>
+      <!-- Stats -->
+      <div class="glass rounded-3xl p-6 md:p-8 md:col-span-3 rev d2" style="border:1px solid var(--border)">
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 text-center">
+          <div><p class="font-black" style="font-size:2.5rem;color:var(--text)" data-count="50" data-suffix="+">0+</p><p style="font-size:9px;font-weight:900;text-transform:uppercase;letter-spacing:.15em;color:var(--muted)"><i class="fa-solid fa-rocket mr-1" style="color:var(--p)"></i>Projects</p></div>
+          <div style="border-left:1px solid var(--border)"><p class="font-black" style="font-size:2.5rem;color:var(--text)" data-count="8" data-suffix="+">0+</p><p style="font-size:9px;font-weight:900;text-transform:uppercase;letter-spacing:.15em;color:var(--muted)"><i class="fa-solid fa-calendar mr-1" style="color:var(--c)"></i>Years</p></div>
+          <div style="border-left:1px solid var(--border)"><p class="font-black" style="font-size:2.5rem;color:var(--text)" data-count="15" data-suffix="+">0+</p><p style="font-size:9px;font-weight:900;text-transform:uppercase;letter-spacing:.15em;color:var(--muted)"><i class="fa-solid fa-building mr-1" style="color:var(--p)"></i>Clients</p></div>
+          <div style="border-left:1px solid var(--border)"><p class="font-black" style="font-size:2.5rem;color:var(--text)" data-count="99" data-suffix="%">0%</p><p style="font-size:9px;font-weight:900;text-transform:uppercase;letter-spacing:.15em;color:var(--muted)"><i class="fa-solid fa-shield mr-1" style="color:var(--c)"></i>Uptime</p></div>
         </div>
-    </section>
+      </div>
+    </div>
+  </div>
+</section>
 
-    <!-- ═══════════════════════ CONTACT / FOOTER ═══════════════════════ -->
-    <footer id="contact" class="section-py section-px relative" style="border-top:1px solid var(--border);background:rgba(0,0,0,0.2)">
-        <div class="absolute inset-0 grid-bg opacity-10"></div>
-        <div class="max-w-4xl mx-auto text-center flex flex-col items-center relative z-10">
-            <p class="section-label mb-4 reveal"><i class="fa-solid fa-envelope mr-2"></i>06 — Contact</p>
-            <h2 class="font-display font-black leading-tight mb-6 reveal d1" style="font-size:clamp(2rem,5vw,4rem);color:var(--text)">
-                Let's Build<br/><span class="grad">Something Great</span>
-            </h2>
-            <p class="text-base md:text-lg leading-relaxed mb-10 reveal d2" style="color:var(--muted);max-width:480px">
-                Have a SaaS product, enterprise system, or complex project in mind? Let's make it happen.
-            </p>
-            <!-- Buttons: full-width stacked on mobile, inline on sm+ -->
-            <div class="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center mb-12 reveal d3 w-full sm:w-auto">
-                <a href="mailto:hello@abdullahimukhtar.com" class="btn-primary btn-stack-mobile">
-                    <i class="fa-solid fa-envelope"></i> Send Email
-                </a>
-                <a href="https://www.linkedin.com/in/abdullahi-deeer-562aa530b" target="_blank" class="btn-ghost btn-stack-mobile">
-                    <i class="fa-brands fa-linkedin"></i> LinkedIn
-                </a>
-            </div>
-            <!-- Social icons: smaller gap on mobile -->
-            <div class="flex gap-3 sm:gap-5 mb-12 reveal d4">
-                <a href="https://github.com/Abdullahi0720006477" target="_blank" class="glass card-hover rounded-2xl p-3 sm:p-4 flex flex-col items-center gap-2" style="border:1px solid var(--border)">
-                    <i class="fa-brands fa-github text-xl sm:text-2xl" style="color:var(--text)"></i>
-                    <span style="font-size:9px;font-weight:900;text-transform:uppercase;letter-spacing:.15em;color:var(--muted)">GitHub</span>
-                </a>
-                <a href="https://www.linkedin.com/in/abdullahi-deeer-562aa530b" target="_blank" class="glass card-hover rounded-2xl p-3 sm:p-4 flex flex-col items-center gap-2" style="border:1px solid var(--border)">
-                    <i class="fa-brands fa-linkedin text-xl sm:text-2xl" style="color:var(--text)"></i>
-                    <span style="font-size:9px;font-weight:900;text-transform:uppercase;letter-spacing:.15em;color:var(--muted)">LinkedIn</span>
-                </a>
-                <a href="https://personal-portfolio-v1-three.vercel.app/" class="glass card-hover rounded-2xl p-3 sm:p-4 flex flex-col items-center gap-2" style="border:1px solid var(--border)">
-                    <i class="fa-solid fa-globe text-xl sm:text-2xl" style="color:var(--text)"></i>
-                    <span style="font-size:9px;font-weight:900;text-transform:uppercase;letter-spacing:.15em;color:var(--muted)">Portfolio</span>
-                </a>
-            </div>
-            <p style="font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:.4em;color:var(--border)">© 2026 Abdullahidev · All Rights Reserved</p>
+<!-- ══════════════ SKILLS ══════════════ -->
+<section id="skills" class="sec" style="background:rgba(0,0,0,.15);z-index:1;position:relative">
+  <div class="max-w-7xl mx-auto">
+    <div class="rev mb-10">
+      <p class="sec-lbl mb-1"><i class="fa-solid fa-chart-bar mr-2"></i>02 — Skills</p>
+      <h2 class="sec-h">Technical Proficiency</h2>
+      <div class="sec-line"></div>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div class="glass proj rounded-3xl p-6 md:p-8 rev" style="border:1px solid var(--border)">
+        <h3 class="font-black text-base mb-6 flex items-center gap-2" style="color:var(--text)"><span class="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0" style="background:rgba(139,92,246,.12);border:1px solid rgba(139,92,246,.25)"><i class="fa-solid fa-server" style="color:var(--p);font-size:12px"></i></span>Backend & Database</h3>
+        <div class="space-y-4">
+          <div><div class="flex justify-between mb-1"><span class="text-sm font-bold" style="color:var(--text)"><i class="fa-brands fa-php mr-1" style="color:var(--p)"></i>PHP / Laravel</span><span class="text-sm font-black" style="color:var(--p)">90%</span></div><div class="bar-t"><div class="bar-f" data-w="90"></div></div></div>
+          <div><div class="flex justify-between mb-1"><span class="text-sm font-bold" style="color:var(--text)"><i class="fa-solid fa-database mr-1" style="color:var(--c)"></i>MySQL / PostgreSQL</span><span class="text-sm font-black" style="color:var(--p)">85%</span></div><div class="bar-t"><div class="bar-f" data-w="85"></div></div></div>
+          <div><div class="flex justify-between mb-1"><span class="text-sm font-bold" style="color:var(--text)"><i class="fa-solid fa-plug mr-1" style="color:var(--p)"></i>REST API Design</span><span class="text-sm font-black" style="color:var(--p)">88%</span></div><div class="bar-t"><div class="bar-f" data-w="88"></div></div></div>
+          <div><div class="flex justify-between mb-1"><span class="text-sm font-bold" style="color:var(--text)"><i class="fa-solid fa-sitemap mr-1" style="color:var(--c)"></i>System Architecture</span><span class="text-sm font-black" style="color:var(--p)">92%</span></div><div class="bar-t"><div class="bar-f" data-w="92"></div></div></div>
         </div>
-    </footer>
+      </div>
+      <div class="glass proj rounded-3xl p-6 md:p-8 rev d1" style="border:1px solid var(--border)">
+        <h3 class="font-black text-base mb-6 flex items-center gap-2" style="color:var(--text)"><span class="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0" style="background:rgba(6,182,212,.1);border:1px solid rgba(6,182,212,.25)"><i class="fa-solid fa-globe" style="color:var(--c);font-size:12px"></i></span>Frontend & DevOps</h3>
+        <div class="space-y-4">
+          <div><div class="flex justify-between mb-1"><span class="text-sm font-bold" style="color:var(--text)"><i class="fa-brands fa-react mr-1" style="color:var(--c)"></i>TypeScript / React</span><span class="text-sm font-black" style="color:var(--p)">82%</span></div><div class="bar-t"><div class="bar-f" data-w="82"></div></div></div>
+          <div><div class="flex justify-between mb-1"><span class="text-sm font-bold" style="color:var(--text)"><i class="fa-brands fa-github mr-1" style="color:var(--p)"></i>CI/CD GitHub Actions</span><span class="text-sm font-black" style="color:var(--p)">78%</span></div><div class="bar-t"><div class="bar-f" data-w="78"></div></div></div>
+          <div><div class="flex justify-between mb-1"><span class="text-sm font-bold" style="color:var(--text)"><i class="fa-brands fa-docker mr-1" style="color:var(--c)"></i>Docker / Linux</span><span class="text-sm font-black" style="color:var(--p)">70%</span></div><div class="bar-t"><div class="bar-f" data-w="70"></div></div></div>
+          <div><div class="flex justify-between mb-1"><span class="text-sm font-bold" style="color:var(--text)"><i class="fa-brands fa-git-alt mr-1" style="color:var(--p)"></i>Git Workflow</span><span class="text-sm font-black" style="color:var(--p)">88%</span></div><div class="bar-t"><div class="bar-f" data-w="88"></div></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 
-    <script>
-    // ── Theme ──
-    function toggleTheme(){
-        document.documentElement.classList.toggle('light');
-        localStorage.setItem('theme', document.documentElement.classList.contains('light') ? 'light' : 'dark');
-    }
-    if(localStorage.getItem('theme') === 'light') document.documentElement.classList.add('light');
+<!-- ══════════════ SERVICES ══════════════ -->
+<section id="services" class="sec" style="z-index:1;position:relative">
+  <div class="max-w-7xl mx-auto">
+    <div class="text-center rev mb-10">
+      <p class="sec-lbl mb-1"><i class="fa-solid fa-briefcase mr-2"></i>03 — Services</p>
+      <h2 class="sec-h">What I Build</h2>
+      <div class="sec-line mx-auto"></div>
+      <p class="mt-4 text-sm md:text-base" style="color:var(--muted);max-width:480px;margin-left:auto;margin-right:auto">Enterprise solutions built with clean architecture and automated pipelines.</p>
+    </div>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+      <div class="glass proj rounded-3xl p-6 rev" style="border:1px solid var(--border)"><div class="w-12 h-12 rounded-2xl flex items-center justify-center mb-4" style="background:rgba(139,92,246,.1);border:1px solid rgba(139,92,246,.2)"><i class="fa-solid fa-building text-xl" style="color:var(--p)"></i></div><h3 class="font-black text-sm mb-2 uppercase tracking-wide" style="color:var(--text)">SaaS Platforms</h3><p class="text-xs leading-relaxed" style="color:var(--muted)">Multi-tenant SaaS with subscription billing, RBAC, automated invoicing and real-time dashboards.</p></div>
+      <div class="glass proj rounded-3xl p-6 rev d1" style="border:1px solid var(--border)"><div class="w-12 h-12 rounded-2xl flex items-center justify-center mb-4" style="background:rgba(6,182,212,.08);border:1px solid rgba(6,182,212,.2)"><i class="fa-solid fa-cash-register text-xl" style="color:var(--c)"></i></div><h3 class="font-black text-sm mb-2 uppercase tracking-wide" style="color:var(--text)">POS Systems</h3><p class="text-xs leading-relaxed" style="color:var(--muted)">Custom point-of-sale for restaurants & retail — orders, billing, inventory and live reporting.</p></div>
+      <div class="glass proj rounded-3xl p-6 rev d2" style="border:1px solid var(--border)"><div class="w-12 h-12 rounded-2xl flex items-center justify-center mb-4" style="background:rgba(139,92,246,.1);border:1px solid rgba(139,92,246,.2)"><i class="fa-brands fa-github text-xl" style="color:var(--p)"></i></div><h3 class="font-black text-sm mb-2 uppercase tracking-wide" style="color:var(--text)">CI/CD Automation</h3><p class="text-xs leading-relaxed" style="color:var(--muted)">GitHub Actions pipelines, automated testing, security audits and deployment workflows.</p></div>
+      <div class="glass proj rounded-3xl p-6 rev d1" style="border:1px solid var(--border)"><div class="w-12 h-12 rounded-2xl flex items-center justify-center mb-4" style="background:rgba(6,182,212,.08);border:1px solid rgba(6,182,212,.2)"><i class="fa-solid fa-cart-shopping text-xl" style="color:var(--c)"></i></div><h3 class="font-black text-sm mb-2 uppercase tracking-wide" style="color:var(--text)">E-Commerce</h3><p class="text-xs leading-relaxed" style="color:var(--muted)">Modern storefronts with TypeScript & React — catalog, cart, orders and payment integration.</p></div>
+      <div class="glass proj rounded-3xl p-6 rev d2" style="border:1px solid var(--border)"><div class="w-12 h-12 rounded-2xl flex items-center justify-center mb-4" style="background:rgba(139,92,246,.1);border:1px solid rgba(139,92,246,.2)"><i class="fa-solid fa-database text-xl" style="color:var(--p)"></i></div><h3 class="font-black text-sm mb-2 uppercase tracking-wide" style="color:var(--text)">Database Design</h3><p class="text-xs leading-relaxed" style="color:var(--muted)">Optimized MySQL & PostgreSQL schemas, query tuning, migrations and data integrity.</p></div>
+      <div class="glass proj rounded-3xl p-6 rev d3" style="border:1px solid var(--border)"><div class="w-12 h-12 rounded-2xl flex items-center justify-center mb-4" style="background:rgba(6,182,212,.08);border:1px solid rgba(6,182,212,.2)"><i class="fa-solid fa-hospital text-xl" style="color:var(--c)"></i></div><h3 class="font-black text-sm mb-2 uppercase tracking-wide" style="color:var(--text)">Management Systems</h3><p class="text-xs leading-relaxed" style="color:var(--muted)">Hospital, property & business systems with full operational control and automation.</p></div>
+    </div>
+  </div>
+</section>
 
-    // ── Cursor (pointer devices only — touch already hidden via CSS) ──
-    const C = document.getElementById('C'), CR = document.getElementById('CR');
-    let mx=0,my=0,fx=0,fy=0;
-    document.addEventListener('mousemove',e=>{ mx=e.clientX; my=e.clientY; C.style.left=mx+'px'; C.style.top=my+'px'; });
-    (function loop(){ fx+=(mx-fx)*.12; fy+=(my-fy)*.12; CR.style.left=fx+'px'; CR.style.top=fy+'px'; requestAnimationFrame(loop); })();
-    document.querySelectorAll('a,button').forEach(el=>{
-        el.addEventListener('mouseenter',()=>{ C.style.transform='translate(-50%,-50%) scale(2.5)'; CR.style.width='52px'; CR.style.height='52px'; });
-        el.addEventListener('mouseleave',()=>{ C.style.transform='translate(-50%,-50%) scale(1)'; CR.style.width='32px'; CR.style.height='32px'; });
-    });
+<!-- ══════════════ PROJECTS ══════════════ -->
+<section id="work" class="sec relative" style="background:rgba(0,0,0,.12);z-index:1">
+  <div class="absolute inset-0 grid-bg opacity-15"></div>
+  <div class="max-w-7xl mx-auto relative z-10">
+    <div class="text-center rev mb-10">
+      <p class="sec-lbl mb-1"><i class="fa-solid fa-code mr-2"></i>04 — Work</p>
+      <h2 class="sec-h">Featured Projects</h2>
+      <div class="sec-line mx-auto"></div>
+    </div>
 
-    // ── Typing animation ──
-    const words=['Systems','SaaS Apps','Platforms','APIs','Solutions'];
-    let wi=0,ci=0,del=false;
-    const tel=document.getElementById('typed');
-    function type(){
-        const w=words[wi];
-        tel.textContent = del ? w.slice(0,--ci) : w.slice(0,++ci);
-        if(!del && ci===w.length) setTimeout(()=>del=true, 1800);
-        else if(del && ci===0){ del=false; wi=(wi+1)%words.length; }
-        setTimeout(type, del?55:100);
-    }
-    setTimeout(type,1000);
+    <!-- Big card -->
+    <div class="glass proj rounded-3xl overflow-hidden mb-6 rev" style="border:1px solid var(--border)">
+      <div class="flex flex-col lg:grid lg:grid-cols-2">
+        <div class="relative overflow-hidden" style="height:260px;min-height:200px">
+          <img src="assets/property_management_mockup.png" class="w-full h-full object-cover" style="transition:transform .8s ease,filter .5s;filter:brightness(.75) saturate(.9)" onmouseover="this.style.transform='scale(1.06)';this.style.filter='brightness(.9) saturate(1)'" onmouseout="this.style.transform='scale(1)';this.style.filter='brightness(.75) saturate(.9)'" alt="Property Management SaaS"/>
+          <div class="absolute inset-0" style="background:linear-gradient(135deg,rgba(139,92,246,.3) 0%,transparent 60%)"></div>
+          <span class="absolute top-4 left-4 btn-p" style="font-size:9px;padding:6px 14px;border-radius:8px"><i class="fa-solid fa-star mr-1"></i>Featured</span>
+        </div>
+        <div class="p-6 md:p-10 flex flex-col justify-center">
+          <div class="flex items-center gap-3 mb-4">
+            <div class="w-11 h-11 rounded-2xl flex items-center justify-center flex-shrink-0" style="background:rgba(139,92,246,.12);border:1px solid rgba(139,92,246,.25)"><i class="fa-solid fa-building" style="color:var(--p)"></i></div>
+            <div><h3 class="font-black text-lg" style="color:var(--text)">Property Management SaaS</h3><p style="font-size:11px;color:var(--p);font-weight:700">Enterprise Real Estate Platform</p></div>
+          </div>
+          <p class="text-sm leading-relaxed mb-5" style="color:var(--muted)">Full-cycle property management — tenant lifecycle, lease tracking, automated invoicing, expense monitoring, and real-time financial reporting with CI/CD pipelines.</p>
+          <div class="flex flex-wrap gap-1.5 mb-5"><span class="tag"><i class="fa-brands fa-php mr-1"></i>PHP</span><span class="tag"><i class="fa-solid fa-database mr-1"></i>MySQL</span><span class="tag">MVC</span><span class="tag"><i class="fa-brands fa-github mr-1"></i>CI/CD</span></div>
+          <a href="https://github.com/Abdullahi0720006477/Property-Management-System-SaaS" target="_blank" class="btn-p" style="font-size:10px;padding:10px 20px;align-self:flex-start"><i class="fa-brands fa-github"></i>View on GitHub</a>
+        </div>
+      </div>
+    </div>
 
-    // ── Mobile menu ──
-    function toggleMob(){
-        document.getElementById('mob-menu').classList.toggle('open');
-        document.getElementById('mob-overlay').classList.toggle('hidden');
-    }
+    <!-- Row 2: 3 cards -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 mb-5">
+      <div class="glass proj rounded-3xl overflow-hidden rev" style="border:1px solid var(--border)">
+        <div class="relative overflow-hidden" style="height:180px"><img src="assets/anfac_pos.jpg" class="w-full h-full object-cover" style="transition:transform .8s,filter .5s;filter:brightness(.7)" onmouseover="this.style.transform='scale(1.06)';this.style.filter='brightness(.85)'" onmouseout="this.style.transform='scale(1)';this.style.filter='brightness(.7)'" alt="Restaurant POS"/><div class="absolute inset-0" style="background:linear-gradient(to top,var(--bg) 0%,transparent 60%)"></div><span class="absolute top-3 left-3 tag"><i class="fa-solid fa-cash-register mr-1" style="color:var(--c)"></i>POS</span></div>
+        <div class="p-5"><div class="flex items-start justify-between mb-2"><h3 class="font-black text-sm" style="color:var(--text)">Restaurant POS System</h3><a href="https://github.com/Abdullahi0720006477/Restaurant-POS-System" target="_blank" style="color:var(--muted)"><i class="fa-solid fa-arrow-up-right-from-square text-xs"></i></a></div><p class="text-xs leading-relaxed mb-3" style="color:var(--muted)">Order management, billing & inventory for high-volume restaurants.</p><div class="flex flex-wrap gap-1"><span class="tag"><i class="fa-brands fa-php mr-1"></i>PHP</span><span class="tag"><i class="fa-solid fa-database mr-1"></i>MySQL</span></div></div>
+      </div>
+      <div class="glass proj rounded-3xl overflow-hidden rev d1" style="border:1px solid var(--border)">
+        <div class="relative overflow-hidden" style="height:180px"><img src="assets/coffee_pos_mockup.png" class="w-full h-full object-cover" style="transition:transform .8s,filter .5s;filter:brightness(.7)" onmouseover="this.style.transform='scale(1.06)';this.style.filter='brightness(.85)'" onmouseout="this.style.transform='scale(1)';this.style.filter='brightness(.7)'" alt="Coffee POS"/><div class="absolute inset-0" style="background:linear-gradient(to top,var(--bg) 0%,transparent 60%)"></div><span class="absolute top-3 left-3 tag"><i class="fa-solid fa-mug-hot mr-1" style="color:var(--p)"></i>FinTech</span></div>
+        <div class="p-5"><div class="flex items-start justify-between mb-2"><h3 class="font-black text-sm" style="color:var(--text)">ANFAC Coffee House POS</h3><a href="https://github.com/Abdullahi0720006477" target="_blank" style="color:var(--muted)"><i class="fa-solid fa-arrow-up-right-from-square text-xs"></i></a></div><p class="text-xs leading-relaxed mb-3" style="color:var(--muted)">FinTech POS with loyalty features for coffee retailers.</p><div class="flex flex-wrap gap-1"><span class="tag"><i class="fa-brands fa-laravel mr-1"></i>Laravel</span><span class="tag"><i class="fa-solid fa-database mr-1"></i>MySQL</span></div></div>
+      </div>
+      <div class="glass proj rounded-3xl overflow-hidden rev d2 sm:col-span-2 lg:col-span-1" style="border:1px solid var(--border)">
+        <div class="relative overflow-hidden" style="height:180px"><img src="assets/school_management_mockup.png" class="w-full h-full object-cover" style="transition:transform .8s,filter .5s;filter:brightness(.7)" onmouseover="this.style.transform='scale(1.06)';this.style.filter='brightness(.85)'" onmouseout="this.style.transform='scale(1)';this.style.filter='brightness(.7)'" alt="Hospital Management"/><div class="absolute inset-0" style="background:linear-gradient(to top,var(--bg) 0%,transparent 60%)"></div><span class="absolute top-3 left-3 tag"><i class="fa-solid fa-hospital mr-1" style="color:var(--c)"></i>Healthcare</span></div>
+        <div class="p-5"><div class="flex items-start justify-between mb-2"><h3 class="font-black text-sm" style="color:var(--text)">Hospital Management System</h3><a href="https://github.com/Abdullahi0720006477/Hospital-Management-System" target="_blank" style="color:var(--muted)"><i class="fa-solid fa-arrow-up-right-from-square text-xs"></i></a></div><p class="text-xs leading-relaxed mb-3" style="color:var(--muted)">Patient records, appointments & staff management with CI/CD.</p><div class="flex flex-wrap gap-1"><span class="tag"><i class="fa-brands fa-php mr-1"></i>PHP</span><span class="tag">Twig</span></div></div>
+      </div>
+    </div>
 
-    // ── Scroll reveal ──
-    const revObs = new IntersectionObserver((es)=>es.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('in'); }),{threshold:.08,rootMargin:'0px 0px -40px 0px'});
-    document.querySelectorAll('.reveal').forEach(el=>revObs.observe(el));
+    <!-- Row 3: 2 cards -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+      <div class="glass proj rounded-3xl overflow-hidden rev" style="border:1px solid var(--border)">
+        <div class="flex flex-col sm:flex-row">
+          <div class="flex items-center justify-center sm:w-40 flex-shrink-0" style="height:140px;background:linear-gradient(135deg,rgba(6,182,212,.15),rgba(139,92,246,.1))"><i class="fa-solid fa-basket-shopping" style="font-size:3rem;color:var(--c);opacity:.6"></i></div>
+          <div class="p-5"><div class="flex items-start justify-between mb-2"><h3 class="font-black text-sm" style="color:var(--text)">Hallo Fresh Grocery</h3><a href="https://github.com/Abdullahi0720006477/Hallo-Fresh-Grocery" target="_blank" style="color:var(--muted)"><i class="fa-solid fa-arrow-up-right-from-square text-xs"></i></a></div><p class="text-xs leading-relaxed mb-3" style="color:var(--muted)">Grocery delivery platform — catalog, cart & order tracking.</p><div class="flex flex-wrap gap-1"><span class="tag"><i class="fa-brands fa-react mr-1"></i>React</span><span class="tag"><i class="fa-brands fa-js mr-1"></i>TypeScript</span></div></div>
+        </div>
+      </div>
+      <div class="glass proj rounded-3xl overflow-hidden rev d1" style="border:1px solid var(--border)">
+        <div class="flex flex-col sm:flex-row">
+          <div class="flex items-center justify-center sm:w-40 flex-shrink-0" style="height:140px;background:linear-gradient(135deg,rgba(139,92,246,.15),rgba(6,182,212,.1))"><i class="fa-solid fa-microchip" style="font-size:3rem;color:var(--p);opacity:.6"></i></div>
+          <div class="p-5"><div class="flex items-start justify-between mb-2"><h3 class="font-black text-sm" style="color:var(--text)">Marso Electronics</h3><a href="https://github.com/Abdullahi0720006477/Marso-Electronics" target="_blank" style="color:var(--muted)"><i class="fa-solid fa-arrow-up-right-from-square text-xs"></i></a></div><p class="text-xs leading-relaxed mb-3" style="color:var(--muted)">E-commerce for electronics — listings, cart & checkout.</p><div class="flex flex-wrap gap-1"><span class="tag"><i class="fa-brands fa-react mr-1"></i>React</span><span class="tag"><i class="fa-brands fa-js mr-1"></i>TypeScript</span></div></div>
+        </div>
+      </div>
+    </div>
 
-    // ── Skill bars ──
-    const skillObs = new IntersectionObserver(es=>es.forEach(e=>{
-        if(e.isIntersecting) e.target.querySelectorAll('.bar-fill').forEach(b=>b.style.width=b.dataset.w+'%');
-    }),{threshold:.3});
-    document.querySelectorAll('#skills').forEach(el=>skillObs.observe(el));
+    <div class="flex justify-center mt-8 rev">
+      <a href="https://github.com/Abdullahi0720006477" target="_blank" class="btn-g mag-btn"><i class="fa-brands fa-github"></i>View All on GitHub</a>
+    </div>
+  </div>
+</section>
 
-    // ── Counters ──
-    const countObs = new IntersectionObserver(es=>es.forEach(e=>{
-        if(e.isIntersecting) e.target.querySelectorAll('[data-count]').forEach(el=>{
-            const t=+el.dataset.count, s=el.dataset.suffix||'';
-            let c=0; const step=t/60;
-            const id=setInterval(()=>{ c=Math.min(c+step,t); el.textContent=Math.floor(c)+s; if(c>=t) clearInterval(id); },22);
-        });
-    }),{threshold:.5});
-    document.querySelectorAll('#about').forEach(el=>countObs.observe(el));
+<!-- ══════════════ JOURNEY ══════════════ -->
+<section id="journey" class="sec" style="z-index:1;position:relative">
+  <div class="max-w-3xl mx-auto">
+    <div class="text-center rev mb-10">
+      <p class="sec-lbl mb-1"><i class="fa-solid fa-timeline mr-2"></i>05 — Journey</p>
+      <h2 class="sec-h">My Journey</h2>
+      <div class="sec-line mx-auto"></div>
+    </div>
+    <div class="relative space-y-12" style="border-left:2px solid var(--border);margin-left:1rem">
+      <div class="relative pl-8 rev">
+        <span class="absolute -left-[11px] top-1.5 w-5 h-5 rounded-full" style="background:var(--p);border:3px solid var(--bg);box-shadow:0 0 18px rgba(139,92,246,.7)"></span>
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-2">
+          <h3 class="font-black text-lg" style="color:var(--text)"><i class="fa-solid fa-crown mr-2" style="color:var(--p)"></i>Senior Systems Architect</h3>
+          <span class="tag mt-2 sm:mt-0 w-fit" style="color:var(--p);border-color:rgba(139,92,246,.3)">2021 – Present</span>
+        </div>
+        <p class="font-bold text-sm mb-1" style="color:var(--p)">Enterprise SaaS & Systems</p>
+        <p class="text-sm leading-relaxed" style="color:var(--muted)">Designing enterprise SaaS — Property Management, Hospital Systems, POS — with full CI/CD, MVC architecture and automated deployments.</p>
+      </div>
+      <div class="relative pl-8 rev d1">
+        <span class="absolute -left-[11px] top-1.5 w-5 h-5 rounded-full" style="background:var(--surface);border:3px solid var(--border)"></span>
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-2">
+          <h3 class="font-black text-lg" style="color:var(--text)"><i class="fa-solid fa-code mr-2" style="color:var(--muted)"></i>Full-Stack Developer</h3>
+          <span class="tag mt-2 sm:mt-0 w-fit">2018 – 2021</span>
+        </div>
+        <p class="font-bold text-sm mb-1" style="color:var(--muted)">Digital Agency & Freelance</p>
+        <p class="text-sm leading-relaxed" style="color:var(--muted)">Built custom web apps in e-commerce, logistics, and healthcare. Optimized queries improving performance by 40%.</p>
+      </div>
+      <div class="relative pl-8 rev d2">
+        <span class="absolute -left-[11px] top-1.5 w-5 h-5 rounded-full" style="background:var(--surface);border:3px solid var(--border)"></span>
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-2">
+          <h3 class="font-black text-lg" style="color:var(--text)"><i class="fa-solid fa-seedling mr-2" style="color:var(--muted)"></i>Junior Web Developer</h3>
+          <span class="tag mt-2 sm:mt-0 w-fit">2016 – 2018</span>
+        </div>
+        <p class="font-bold text-sm mb-1" style="color:var(--muted)">Freelance & Contract</p>
+        <p class="text-sm leading-relaxed" style="color:var(--muted)">Built responsive websites and e-commerce stores for local businesses, laying the foundation in PHP, HTML, CSS, and JavaScript.</p>
+      </div>
+    </div>
+  </div>
+</section>
 
-    // ── Navbar scroll ──
-    window.addEventListener('scroll',()=>{
-        document.getElementById('navbar').classList.toggle('scrolled', window.scrollY>60);
-    });
-    </script>
+<!-- ══════════════ CONTACT ══════════════ -->
+<footer id="contact" class="sec relative" style="border-top:1px solid var(--border);background:rgba(0,0,0,.2);z-index:1">
+  <div class="absolute inset-0 grid-bg opacity-10"></div>
+  <div class="max-w-3xl mx-auto text-center flex flex-col items-center relative z-10">
+    <p class="sec-lbl mb-4 rev"><i class="fa-solid fa-envelope mr-2"></i>06 — Contact</p>
+    <h2 class="font-black leading-tight mb-5 rev d1" style="font-size:clamp(1.8rem,5vw,3.5rem);color:var(--text)">Let's Build<br/><span class="grad">Something Great</span></h2>
+    <p class="text-sm md:text-base leading-relaxed mb-10 rev d2" style="color:var(--muted);max-width:440px">Have a SaaS product, enterprise system, or complex project? Let's make it happen.</p>
+    <div class="flex flex-wrap gap-3 justify-center mb-12 rev d3">
+      <a href="mailto:hello@abdullahimukhtar.com" class="btn-p mag-btn"><i class="fa-solid fa-envelope"></i>Send Email</a>
+      <a href="https://www.linkedin.com/in/abdullahi-deeer-562aa530b" target="_blank" class="btn-g mag-btn"><i class="fa-brands fa-linkedin"></i>LinkedIn</a>
+    </div>
+    <div class="flex gap-4 mb-12 rev d4">
+      <a href="https://github.com/Abdullahi0720006477" target="_blank" class="glass proj rounded-2xl p-4 flex flex-col items-center gap-2" style="border:1px solid var(--border);min-width:72px"><i class="fa-brands fa-github text-2xl" style="color:var(--text)"></i><span style="font-size:9px;font-weight:900;text-transform:uppercase;letter-spacing:.12em;color:var(--muted)">GitHub</span></a>
+      <a href="https://www.linkedin.com/in/abdullahi-deeer-562aa530b" target="_blank" class="glass proj rounded-2xl p-4 flex flex-col items-center gap-2" style="border:1px solid var(--border);min-width:72px"><i class="fa-brands fa-linkedin text-2xl" style="color:var(--text)"></i><span style="font-size:9px;font-weight:900;text-transform:uppercase;letter-spacing:.12em;color:var(--muted)">LinkedIn</span></a>
+      <a href="https://personal-portfolio-v1-three.vercel.app/" class="glass proj rounded-2xl p-4 flex flex-col items-center gap-2" style="border:1px solid var(--border);min-width:72px"><i class="fa-solid fa-globe text-2xl" style="color:var(--text)"></i><span style="font-size:9px;font-weight:900;text-transform:uppercase;letter-spacing:.12em;color:var(--muted)">Portfolio</span></a>
+    </div>
+    <p style="font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:.4em;color:var(--border)">© 2026 Abdullahidev · All Rights Reserved</p>
+  </div>
+</footer>
+
+<script>
+// ── Canvas particles ──
+const canvas=document.getElementById('bg-canvas'),ctx=canvas.getContext('2d');
+let W,H,pts=[];
+function resize(){W=canvas.width=window.innerWidth;H=canvas.height=window.innerHeight;pts=Array.from({length:60},()=>({x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-.5)*.3,vy:(Math.random()-.5)*.3,r:Math.random()*1.5+.5}))}
+resize();window.addEventListener('resize',resize);
+function drawCanvas(){
+  ctx.clearRect(0,0,W,H);
+  const isDark=!document.documentElement.classList.contains('light');
+  pts.forEach(p=>{
+    p.x+=p.vx;p.y+=p.vy;
+    if(p.x<0||p.x>W)p.vx*=-1;if(p.y<0||p.y>H)p.vy*=-1;
+    ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+    ctx.fillStyle=isDark?'rgba(139,92,246,.5)':'rgba(139,92,246,.25)';ctx.fill();
+  });
+  pts.forEach((a,i)=>pts.slice(i+1).forEach(b=>{
+    const d=Math.hypot(a.x-b.x,a.y-b.y);
+    if(d<120){ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);ctx.strokeStyle=isDark?`rgba(139,92,246,${.15*(1-d/120)})`:`rgba(139,92,246,${.08*(1-d/120)})`;ctx.lineWidth=.5;ctx.stroke()}
+  }));
+  requestAnimationFrame(drawCanvas);
+}
+drawCanvas();
+
+// ── Theme ──
+function toggleTheme(){document.documentElement.classList.toggle('light');localStorage.setItem('theme',document.documentElement.classList.contains('light')?'light':'dark')}
+if(localStorage.getItem('theme')==='light')document.documentElement.classList.add('light');
+
+// ── Cursor ──
+const C=document.getElementById('C'),CR=document.getElementById('CR');
+let mx=0,my=0,fx=0,fy=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;C.style.left=mx+'px';C.style.top=my+'px'});
+(function loop(){fx+=(mx-fx)*.1;fy+=(my-fy)*.1;CR.style.left=fx+'px';CR.style.top=fy+'px';requestAnimationFrame(loop)})();
+document.querySelectorAll('a,button,.proj').forEach(el=>{
+  el.addEventListener('mouseenter',()=>{C.style.transform='translate(-50%,-50%) scale(3)';CR.style.width='50px';CR.style.height='50px';CR.style.opacity='1'});
+  el.addEventListener('mouseleave',()=>{C.style.transform='translate(-50%,-50%) scale(1)';CR.style.width='30px';CR.style.height='30px';CR.style.opacity='.5'});
+});
+
+// ── Typing ──
+const words=['Systems','SaaS Apps','Platforms','APIs','Solutions'];
+let wi=0,ci=0,del=false;const tel=document.getElementById('typed');
+function type(){const w=words[wi];tel.textContent=del?w.slice(0,--ci):w.slice(0,++ci);if(!del&&ci===w.length)setTimeout(()=>del=true,1800);else if(del&&ci===0){del=false;wi=(wi+1)%words.length}setTimeout(type,del?55:100)}
+setTimeout(type,800);
+
+// ── Mobile menu ──
+function toggleMob(){document.getElementById('mob').classList.toggle('open');document.getElementById('mob-ov').classList.toggle('hidden')}
+
+// ── Scroll reveal ──
+const revObs=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('in')}),{threshold:.08,rootMargin:'0px 0px -40px 0px'});
+document.querySelectorAll('.rev').forEach(el=>revObs.observe(el));
+
+// ── Skill bars ──
+const skillObs=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)e.target.querySelectorAll('.bar-f').forEach(b=>b.style.width=b.dataset.w+'%')}),{threshold:.3});
+document.querySelectorAll('#skills').forEach(el=>skillObs.observe(el));
+
+// ── Counters ──
+const cntObs=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)e.target.querySelectorAll('[data-count]').forEach(el=>{const t=+el.dataset.count,s=el.dataset.suffix||'';let c=0;const step=t/60;const id=setInterval(()=>{c=Math.min(c+step,t);el.textContent=Math.floor(c)+s;if(c>=t)clearInterval(id)},22)})}),{threshold:.5});
+document.querySelectorAll('#about').forEach(el=>cntObs.observe(el));
+
+// ── Nav scroll ──
+window.addEventListener('scroll',()=>document.getElementById('nav').classList.toggle('scrolled',window.scrollY>60));
+
+// ── GSAP 3D scroll animations ──
+gsap.registerPlugin(ScrollTrigger);
+gsap.utils.toArray('.proj').forEach((el,i)=>{
+  gsap.from(el,{scrollTrigger:{trigger:el,start:'top 85%'},y:60,opacity:0,rotationX:15,transformPerspective:800,duration:.9,delay:i*.05,ease:'power3.out'});
+});
+gsap.from('#nav',{y:-80,opacity:0,duration:.8,ease:'power3.out'});
+gsap.from('.orb',{scale:0,opacity:0,duration:2,stagger:.3,ease:'power2.out'});
+
+// ── Vanilla Tilt on profile ──
+const tiltEl=document.getElementById('profile-tilt');
+if(tiltEl&&window.innerWidth>=768){
+  VanillaTilt.init(tiltEl,{max:12,speed:400,glare:true,'max-glare':.15,perspective:800,scale:1.03});
+}
+
+// ── Magnetic buttons ──
+document.querySelectorAll('.mag-btn').forEach(btn=>{
+  btn.addEventListener('mousemove',e=>{
+    const r=btn.getBoundingClientRect(),x=(e.clientX-r.left-r.width/2)*.2,y=(e.clientY-r.top-r.height/2)*.2;
+    btn.style.transform=`translate(${x}px,${y}px)`;
+  });
+  btn.addEventListener('mouseleave',()=>btn.style.transform='');
+});
+</script>
 </body>
 </html>
