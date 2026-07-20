@@ -1,627 +1,198 @@
-<!DOCTYPE html>
-<html lang="en" class="dark">
+<!doctype html>
+<html lang="en">
 <head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Abdullahidev | Senior Systems Architect</title>
-<meta name="description" content="Senior Systems Architect & SaaS Product Engineer building scalable enterprise systems."/>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@500;600;700;800&display=swap" rel="stylesheet"/>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
-<script src="https://cdn.tailwindcss.com"></script>
-<!-- GSAP + ScrollTrigger -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
-<!-- Vanilla Tilt 3D -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.1/vanilla-tilt.min.js"></script>
-
-<style>
-:root {
-  --bg:#09090f; --surface:#111119; --border:rgba(255,255,255,0.07);
-  --text:#f1f5f9; --muted:#94a3b8; --p:#8b5cf6; --c:#06b6d4;
-  --card:rgba(255,255,255,0.03);
-}
-html.light {
-  --bg:#f5f3ff; --surface:#ffffff; --border:rgba(139,92,246,0.12);
-  --text:#1e1b4b; --muted:#6b7280; --p:#7c3aed; --c:#0891b2;
-  --card:rgba(139,92,246,0.04);
-}
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth}
-body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden;transition:background .4s,color .4s}
-h1,h2,h3{font-family:'Space Grotesk',sans-serif}
-
-/* ── Canvas BG ── */
-#bg-canvas{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none;opacity:.5}
-
-/* ── Cursor ── */
-.cur,.cur-r{position:fixed;border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%)}
-.cur{width:8px;height:8px;background:var(--p);transition:transform .1s}
-.cur-r{width:30px;height:30px;border:1.5px solid var(--p);opacity:.5;transition:transform .18s,width .3s,height .3s}
-@media(pointer:coarse){.cur,.cur-r{display:none}}
-
-/* ── Glass ── */
-.glass{background:var(--card);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid var(--border)}
-html.light .glass{box-shadow:0 2px 24px rgba(139,92,246,.07)}
-
-/* ── 3D card ── */
-.card3d{transform-style:preserve-3d;transform:perspective(1000px)}
-.card3d-inner{transition:transform .4s cubic-bezier(.4,0,.2,1);transform-style:preserve-3d}
-.card3d:hover .card3d-inner{transform:rotateX(-6deg) rotateY(4deg) scale(1.02)}
-
-/* ── Magnetic button ── */
-.mag-btn{transition:transform .3s cubic-bezier(.4,0,.2,1),box-shadow .3s}
-
-/* ── Reveal ── */
-.rev{opacity:0;transform:translateY(48px);transition:opacity .8s ease,transform .8s ease}
-.rev.in{opacity:1;transform:translateY(0)}
-.d1{transition-delay:.1s}.d2{transition-delay:.2s}.d3{transition-delay:.3s}.d4{transition-delay:.4s}
-
-/* ── Gradient text ── */
-.grad{background:linear-gradient(135deg,var(--p),var(--c));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-.grad-h{background:linear-gradient(135deg,#fff 0%,#c4b5fd 50%,var(--c) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-html.light .grad-h{background:linear-gradient(135deg,#1e1b4b 0%,var(--p) 60%,var(--c) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-
-/* ── Grid bg ── */
-.grid-bg{background-image:radial-gradient(circle at 1px 1px,var(--border) 1px,transparent 0);background-size:36px 36px}
-
-/* ── Skill bar ── */
-.bar-t{height:5px;border-radius:99px;background:var(--border);overflow:hidden}
-.bar-f{height:100%;border-radius:99px;background:linear-gradient(90deg,var(--p),var(--c));width:0;transition:width 1.8s cubic-bezier(.4,0,.2,1)}
-
-/* ── Typing ── */
-#typed::after{content:'|';animation:blink .9s step-end infinite;color:var(--c)}
-@keyframes blink{50%{opacity:0}}
-
-/* ── Float ── */
-@keyframes float{0%,100%{transform:translateY(0) rotate(0deg)}50%{transform:translateY(-12px) rotate(1deg)}}
-.float{animation:float 4s ease-in-out infinite}
-
-/* ── Glow orb ── */
-.orb{position:fixed;border-radius:50%;filter:blur(110px);pointer-events:none;z-index:0}
-
-/* ── Nav ── */
-#nav{transition:background .4s,box-shadow .3s;border-bottom:1px solid var(--border)}
-#nav.scrolled{box-shadow:0 4px 40px rgba(0,0,0,.3)}
-.nl{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--muted);transition:color .2s;position:relative}
-.nl::after{content:'';position:absolute;bottom:-3px;left:0;width:0;height:2px;background:var(--p);border-radius:2px;transition:width .3s}
-.nl:hover{color:var(--text)}.nl:hover::after{width:100%}
-
-/* ── Theme toggle ── */
-.tog{width:46px;height:24px;border-radius:99px;background:var(--border);border:1px solid var(--border);position:relative;cursor:pointer;transition:background .3s}
-.tog::after{content:'';position:absolute;top:3px;left:3px;width:16px;height:16px;border-radius:50%;background:var(--p);transition:transform .3s}
-html.light .tog::after{transform:translateX(22px)}
-
-/* ── Buttons ── */
-.btn-p{background:var(--p);color:#fff;font-weight:800;font-size:11px;text-transform:uppercase;letter-spacing:.15em;border-radius:14px;padding:14px 28px;display:inline-flex;align-items:center;gap:8px;transition:all .3s;box-shadow:0 0 28px rgba(139,92,246,.4);cursor:pointer;white-space:nowrap}
-.btn-p:hover{transform:translateY(-2px) scale(1.03);box-shadow:0 8px 40px rgba(139,92,246,.55)}
-.btn-g{background:var(--card);border:1px solid var(--border);color:var(--text);font-weight:800;font-size:11px;text-transform:uppercase;letter-spacing:.15em;border-radius:14px;padding:14px 28px;display:inline-flex;align-items:center;gap:8px;transition:all .3s;backdrop-filter:blur(10px);cursor:pointer;white-space:nowrap}
-.btn-g:hover{border-color:var(--p);transform:translateY(-2px)}
-
-/* ── Tag ── */
-.tag{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;padding:4px 10px;border-radius:6px;background:var(--card);border:1px solid var(--border);color:var(--muted);white-space:nowrap}
-
-/* ── Section ── */
-.sec{padding:5rem 1rem}
-@media(min-width:640px){.sec{padding:7rem 1.5rem}}
-.sec-lbl{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.25em;color:var(--p)}
-.sec-h{font-size:2rem;font-weight:800;color:var(--text);line-height:1.1}
-@media(min-width:768px){.sec-h{font-size:2.5rem}}
-.sec-line{height:3px;width:44px;background:linear-gradient(90deg,var(--p),var(--c));border-radius:99px;margin-top:8px}
-
-/* ── Profile image ── */
-.profile-wrap{position:relative;width:100%;max-width:360px;margin:0 auto}
-.profile-img{width:100%;aspect-ratio:3/4;object-fit:cover;object-position:top center;border-radius:24px;display:block}
-@media(max-width:767px){
-  .profile-wrap{max-width:180px}
-  .profile-img{aspect-ratio:1/1;border-radius:50%;object-position:center top}
-}
-
-/* ── Floating cards — hidden on mobile ── */
-.fc{display:none}
-@media(min-width:768px){.fc{display:block}}
-
-/* ── Project card ── */
-.proj{transition:transform .4s cubic-bezier(.4,0,.2,1),box-shadow .4s,border-color .3s}
-.proj:hover{transform:translateY(-8px) scale(1.01);box-shadow:0 30px 80px -10px rgba(139,92,246,.25);border-color:var(--p) !important}
-
-/* ── Mobile menu ── */
-#mob{transform:translateX(110%);transition:transform .4s cubic-bezier(.4,0,.2,1);width:min(280px,85vw)}
-#mob.open{transform:translateX(0)}
-
-/* ── 3D tilt override ── */
-.tilt-card{transform-style:preserve-3d}
-.tilt-card .inner{transform:translateZ(20px)}
-
-/* ── Scrollbar ── */
-::-webkit-scrollbar{width:3px}
-::-webkit-scrollbar-track{background:var(--bg)}
-::-webkit-scrollbar-thumb{background:var(--p);border-radius:4px}
-
-/* ── Light overrides ── */
-html.light .grad-h *{color:inherit}
-html.light .text-slate-400{color:var(--muted)!important}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#07120f">
+  <meta name="description" content="Abdullahi Mukhtar is a BBIT student, full-stack developer and AI agent builder creating practical business software.">
+  <title>Abdullahi Mukhtar | Full-Stack Developer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <script src="main.js" defer></script>
 </head>
 <body>
-<!-- Canvas particle background -->
-<canvas id="bg-canvas"></canvas>
+  <a class="skip-link" href="#main">Skip to content</a>
 
-<!-- Ambient orbs -->
-<div class="orb" style="width:500px;height:500px;background:rgba(139,92,246,.1);top:-100px;left:-100px;animation:float 20s ease-in-out infinite"></div>
-<div class="orb" style="width:350px;height:350px;background:rgba(6,182,212,.07);bottom:5%;right:-80px;animation:float 16s ease-in-out infinite reverse"></div>
+  <header class="site-header" id="top">
+    <div class="shell nav-wrap">
+      <a class="brand" href="#top" aria-label="Abdullahi Mukhtar, home">
+        <span class="brand-mark">AM</span>
+        <span>Abdullahi Mukhtar</span>
+      </a>
 
-<!-- Cursor -->
-<div class="cur" id="C"></div>
-<div class="cur-r" id="CR"></div>
-
-<!-- ══════════════ NAV ══════════════ -->
-<nav id="nav" class="fixed top-0 w-full z-50 glass" style="background:rgba(9,9,15,.8)">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
-    <a href="#" class="flex items-center gap-2.5 z-10">
-      <div class="w-8 h-8 rounded-full overflow-hidden flex-shrink-0" style="border:2px solid var(--p)">
-        <img src="assets/profile.jpg" class="w-full h-full object-cover object-top" alt="Abdullahidev"/>
-      </div>
-      <span class="font-black text-sm" style="color:var(--text)">Abdullahi<span style="color:var(--p)">dev</span></span>
-    </a>
-    <div class="hidden md:flex items-center gap-6">
-      <a href="#about"   class="nl">About</a>
-      <a href="#skills"  class="nl">Skills</a>
-      <a href="#services" class="nl">Services</a>
-      <a href="#work"    class="nl">Work</a>
-      <a href="#journey" class="nl">Journey</a>
-      <a href="#contact" class="nl">Contact</a>
-    </div>
-    <div class="flex items-center gap-2.5">
-      <button onclick="toggleTheme()" class="tog" aria-label="Toggle theme"></button>
-      <a href="#contact" class="btn-p hidden md:inline-flex" style="padding:10px 20px;font-size:10px">Let's Talk <i class="fa-solid fa-arrow-right text-xs"></i></a>
-      <button onclick="toggleMob()" class="md:hidden glass rounded-xl p-2.5" style="color:var(--text);border:1px solid var(--border)">
-        <i class="fa-solid fa-bars" id="mob-ico"></i>
+      <button class="menu-button" type="button" aria-expanded="false" aria-controls="primary-nav">
+        <span></span><span></span><span></span>
+        <span class="sr-only">Open menu</span>
       </button>
+
+      <nav class="nav-links" id="primary-nav" aria-label="Primary navigation">
+        <a href="#about">About</a>
+        <a href="#work">Work</a>
+        <a href="#skills">Skills</a>
+        <a href="#contact">Contact</a>
+        <a class="nav-cta" href="https://github.com/Abdullahi0720006477" target="_blank" rel="noreferrer">GitHub <span aria-hidden="true">↗</span></a>
+      </nav>
     </div>
-  </div>
-</nav>
+  </header>
 
-<!-- Mobile menu -->
-<div id="mob" class="fixed top-0 right-0 h-full z-50 glass border-l flex flex-col p-6 pt-20" style="border-color:var(--border)">
-  <button onclick="toggleMob()" class="absolute top-5 right-5" style="color:var(--muted)"><i class="fa-solid fa-xmark text-lg"></i></button>
-  <div class="flex flex-col gap-5">
-    <a href="#about"    onclick="toggleMob()" class="font-bold" style="color:var(--text)"><i class="fa-solid fa-user mr-2" style="color:var(--p)"></i>About</a>
-    <a href="#skills"   onclick="toggleMob()" class="font-bold" style="color:var(--text)"><i class="fa-solid fa-chart-bar mr-2" style="color:var(--p)"></i>Skills</a>
-    <a href="#services" onclick="toggleMob()" class="font-bold" style="color:var(--text)"><i class="fa-solid fa-briefcase mr-2" style="color:var(--p)"></i>Services</a>
-    <a href="#work"     onclick="toggleMob()" class="font-bold" style="color:var(--text)"><i class="fa-solid fa-code mr-2" style="color:var(--p)"></i>Work</a>
-    <a href="#journey"  onclick="toggleMob()" class="font-bold" style="color:var(--text)"><i class="fa-solid fa-timeline mr-2" style="color:var(--p)"></i>Journey</a>
-    <a href="#contact"  onclick="toggleMob()" class="font-bold" style="color:var(--text)"><i class="fa-solid fa-envelope mr-2" style="color:var(--p)"></i>Contact</a>
-  </div>
-  <div class="mt-auto"><a href="#contact" onclick="toggleMob()" class="btn-p w-full justify-center">Let's Talk <i class="fa-solid fa-arrow-right text-xs"></i></a></div>
-</div>
-<div id="mob-ov" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 hidden" onclick="toggleMob()"></div>
+  <main id="main">
+    <section class="hero section">
+      <div class="hero-glow hero-glow-one"></div>
+      <div class="hero-glow hero-glow-two"></div>
+      <div class="shell hero-grid">
+        <div class="hero-copy reveal">
+          <p class="eyebrow"><span class="status-dot"></span> Available for internships and projects</p>
+          <h1>I build useful software for <span>real businesses.</span></h1>
+          <p class="hero-intro">I’m Abdullahi Mukhtar, a BBIT student, full-stack developer and AI agent builder based in Kenya. I turn business problems into clear, reliable digital products.</p>
+          <div class="hero-actions">
+            <a class="button button-primary" href="#work">Explore my work <span aria-hidden="true">↓</span></a>
+            <a class="button button-secondary" href="https://wa.me/254710997587" target="_blank" rel="noreferrer">Start a conversation <span aria-hidden="true">↗</span></a>
+          </div>
+          <ul class="quick-facts" aria-label="Quick facts">
+            <li><strong>24</strong><span>GitHub repositories</span></li>
+            <li><strong>6</strong><span>featured systems</span></li>
+            <li><strong>BBIT</strong><span>Mount Kenya University</span></li>
+          </ul>
+        </div>
 
-<!-- ══════════════ HERO ══════════════ -->
-<header class="relative min-h-screen flex items-center px-4 sm:px-6 pt-20 overflow-hidden" style="z-index:1">
-  <div class="absolute inset-0 grid-bg opacity-20"></div>
-  <div class="max-w-7xl mx-auto w-full grid md:grid-cols-2 gap-10 md:gap-14 items-center py-12 md:py-0">
-
-    <!-- Text — shown second on mobile (order-2), first on desktop -->
-    <div class="order-2 md:order-1 flex flex-col items-center md:items-start text-center md:text-left">
-      <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full glass mb-6 rev" style="border:1px solid rgba(34,197,94,.25)">
-        <span class="relative flex h-2.5 w-2.5"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span><span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-green-500"></span></span>
-        <span style="font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:.18em;color:#4ade80">Available for Projects</span>
-      </div>
-
-      <h1 class="font-black leading-[1.05] tracking-tight mb-5 rev d1" style="font-size:clamp(2.2rem,6vw,4.8rem)">
-        <span class="grad-h">Building</span><br/>
-        <span style="color:var(--text)">Enterprise</span><br/>
-        <span id="typed" style="color:var(--p)">Systems</span>
-      </h1>
-
-      <p class="leading-relaxed font-light mb-8 rev d2" style="font-size:clamp(.95rem,2.5vw,1.15rem);color:var(--muted);max-width:460px;border-left:3px solid var(--p);padding-left:16px">
-        Senior Systems Architect &amp; SaaS Product Engineer crafting <strong style="color:var(--text)">scalable enterprise platforms</strong> — from property management to POS and e-commerce.
-      </p>
-
-      <div class="flex flex-wrap gap-3 mb-8 justify-center md:justify-start rev d3">
-        <a href="#work" class="btn-p mag-btn"><i class="fa-solid fa-eye"></i> View My Work</a>
-        <a href="#contact" class="btn-g mag-btn"><i class="fa-solid fa-paper-plane"></i> Let's Talk</a>
-      </div>
-
-      <div class="rev d4">
-        <p style="font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:.25em;color:var(--muted);margin-bottom:8px">Core Stack</p>
-        <div class="flex flex-wrap gap-1.5 justify-center md:justify-start">
-          <span class="tag"><i class="fa-brands fa-php mr-1"></i>PHP</span>
-          <span class="tag"><i class="fa-brands fa-js mr-1"></i>TypeScript</span>
-          <span class="tag"><i class="fa-solid fa-database mr-1"></i>MySQL</span>
-          <span class="tag"><i class="fa-brands fa-react mr-1"></i>React</span>
-          <span class="tag"><i class="fa-brands fa-laravel mr-1"></i>Laravel</span>
-          <span class="tag"><i class="fa-brands fa-docker mr-1"></i>Docker</span>
+        <div class="portrait-stage reveal reveal-delay">
+          <div class="portrait-frame">
+            <img src="assets/profile.jpg" alt="Portrait of Abdullahi Mukhtar" width="768" height="1024">
+          </div>
+          <div class="floating-note note-top">
+            <span class="note-icon">{ }</span>
+            <div><strong>Full-stack</strong><small>Web systems</small></div>
+          </div>
+          <div class="floating-note note-bottom">
+            <span class="note-icon">✦</span>
+            <div><strong>AI builder</strong><small>Agents and automation</small></div>
+          </div>
+          <p class="portrait-caption">Building from Nairobi, Kenya <span>●</span></p>
         </div>
       </div>
-    </div>
+    </section>
 
-    <!-- Profile image — shown first on mobile (order-1) -->
-    <div class="order-1 md:order-2 flex justify-center rev d2">
-      <div class="profile-wrap tilt-card" id="profile-tilt">
-        <!-- Mobile: circle, Desktop: rounded rectangle -->
-        <div class="relative">
-          <div class="glass rounded-[24px] md:rounded-[32px] overflow-hidden" style="border:1px solid var(--border);box-shadow:0 25px 80px rgba(139,92,246,.25)">
-            <img src="assets/profile.jpg" class="profile-img" alt="Abdullahidev"/>
-            <div class="absolute inset-0 hidden md:block" style="background:linear-gradient(to top,var(--bg) 0%,transparent 55%)"></div>
-            <!-- Name overlay desktop only -->
-            <div class="absolute bottom-5 left-5 right-5 hidden md:block">
-              <p class="font-black text-xl" style="color:var(--text)">Abdullahi Mukhtar</p>
-              <p style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.15em;color:var(--p)">Senior Systems Architect</p>
-            </div>
-          </div>
+    <section class="proof-strip" aria-label="Technology stack">
+      <div class="shell proof-list">
+        <span>PHP</span><span>Laravel</span><span>JavaScript</span><span>TypeScript</span><span>React</span><span>MySQL</span><span>GitHub Actions</span><span>AI APIs</span>
+      </div>
+    </section>
 
-          <!-- Floating cards — desktop only via .fc class -->
-          <div class="fc float absolute -right-10 top-8 glass rounded-2xl p-4" style="border:1px solid var(--border);box-shadow:0 8px 32px rgba(139,92,246,.2)">
-            <p class="font-black text-2xl" style="color:var(--text)">50+</p>
-            <p style="font-size:9px;font-weight:900;text-transform:uppercase;letter-spacing:.15em;color:var(--p)"><i class="fa-solid fa-rocket mr-1"></i>Projects</p>
-          </div>
-          <div class="fc float absolute -left-10 bottom-32 glass rounded-2xl p-4" style="border:1px solid var(--border);animation-delay:-2.5s">
-            <div class="flex items-center gap-2.5">
-              <div class="w-9 h-9 rounded-xl flex items-center justify-center" style="background:rgba(139,92,246,.15);border:1px solid rgba(139,92,246,.3)">
-                <i class="fa-brands fa-github" style="color:var(--p)"></i>
-              </div>
-              <div><p class="font-black text-sm" style="color:var(--text)">CI/CD</p><p style="font-size:8px;font-weight:700;text-transform:uppercase;color:var(--muted)">All Repos</p></div>
-            </div>
-          </div>
-          <div class="fc float absolute -right-6 bottom-10 glass rounded-xl p-3" style="border:1px solid rgba(34,197,94,.2);animation-delay:-4s">
-            <div class="flex items-center gap-2">
-              <span class="relative flex h-2 w-2"><span class="animate-ping absolute h-full w-full rounded-full bg-green-400 opacity-75"></span><span class="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span></span>
-              <span style="font-size:9px;font-weight:900;text-transform:uppercase;letter-spacing:.15em;color:#4ade80">Open to Work</span>
-            </div>
+    <section class="section" id="about">
+      <div class="shell about-grid">
+        <div class="section-heading reveal">
+          <p class="kicker">01 / About</p>
+          <h2>Business understanding meets technical execution.</h2>
+        </div>
+        <div class="about-copy reveal reveal-delay">
+          <p class="lead">My BBIT background helps me understand both the business need and the technology required to solve it.</p>
+          <p>I design and build management systems, point-of-sale applications, e-commerce experiences and AI-powered tools. I care about clean interfaces, secure integrations and software people can actually use.</p>
+          <div class="focus-grid">
+            <article><span>01</span><h3>Discover</h3><p>Understand the user, workflow and business goal.</p></article>
+            <article><span>02</span><h3>Build</h3><p>Create a focused system with a dependable foundation.</p></article>
+            <article><span>03</span><h3>Improve</h3><p>Test, secure and refine the product based on evidence.</p></article>
           </div>
         </div>
       </div>
-    </div>
-  </div>
+    </section>
 
-  <div class="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 cursor-pointer opacity-40 hover:opacity-90 transition-opacity hidden sm:flex" onclick="document.getElementById('about').scrollIntoView({behavior:'smooth'})">
-    <span style="font-size:9px;font-weight:900;text-transform:uppercase;letter-spacing:.4em;color:var(--muted)">Scroll</span>
-    <div style="width:1px;height:36px;background:linear-gradient(to bottom,var(--p),transparent)"></div>
-  </div>
-</header>
+    <section class="section work-section" id="work">
+      <div class="shell">
+        <div class="section-heading section-heading-row reveal">
+          <div><p class="kicker">02 / Selected work</p><h2>Systems designed around real workflows.</h2></div>
+          <a class="text-link" href="https://github.com/Abdullahi0720006477" target="_blank" rel="noreferrer">View all repositories <span aria-hidden="true">↗</span></a>
+        </div>
 
-<!-- ══════════════ ABOUT ══════════════ -->
-<section id="about" class="sec relative" style="z-index:1">
-  <div class="max-w-7xl mx-auto">
-    <div class="rev mb-10">
-      <p class="sec-lbl mb-1"><i class="fa-solid fa-user mr-2"></i>01 — About</p>
-      <h2 class="sec-h">Who I Am</h2>
-      <div class="sec-line"></div>
-    </div>
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
-      <!-- Story -->
-      <div class="glass proj rounded-3xl p-6 md:p-8 md:col-span-2 rev" style="border:1px solid var(--border)">
-        <div class="flex items-center gap-3 mb-5">
-          <div class="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0" style="background:rgba(139,92,246,.12);border:1px solid rgba(139,92,246,.25)"><i class="fa-solid fa-code" style="color:var(--p)"></i></div>
-          <h3 class="font-black text-lg" style="color:var(--text)">My Story</h3>
-        </div>
-        <p class="leading-relaxed text-sm md:text-base mb-4" style="color:var(--muted)">I'm a <strong style="color:var(--text)">Senior Systems Architect & SaaS Product Engineer</strong> passionate about building enterprise-grade platforms. From database architecture to CI/CD pipelines — I handle the full stack.</p>
-        <p class="leading-relaxed text-sm md:text-base" style="color:var(--muted)">My portfolio covers <strong style="color:var(--text)">Property Management SaaS</strong>, Restaurant POS, Hospital Management, and E-commerce — all with clean MVC architecture and automated pipelines.</p>
-        <div class="flex flex-wrap gap-2 mt-6">
-          <span class="tag" style="color:var(--p);border-color:rgba(139,92,246,.3)">#SaaS</span>
-          <span class="tag" style="color:var(--p);border-color:rgba(139,92,246,.3)">#Architecture</span>
-          <span class="tag" style="color:var(--p);border-color:rgba(139,92,246,.3)">#EnterpriseDev</span>
-          <span class="tag" style="color:var(--p);border-color:rgba(139,92,246,.3)">#CI/CD</span>
-        </div>
-      </div>
-      <!-- Stack -->
-      <div class="glass proj rounded-3xl p-6 md:p-8 rev d1" style="border:1px solid var(--border)">
-        <div class="flex items-center gap-3 mb-5">
-          <div class="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0" style="background:rgba(6,182,212,.1);border:1px solid rgba(6,182,212,.25)"><i class="fa-solid fa-layer-group" style="color:var(--c)"></i></div>
-          <h3 class="font-black text-lg" style="color:var(--text)">Stack</h3>
-        </div>
-        <div class="space-y-3 text-sm">
-          <div class="flex justify-between py-2" style="border-bottom:1px solid var(--border)"><span style="color:var(--muted)"><i class="fa-brands fa-php mr-2" style="color:var(--p)"></i>Backend</span><span class="font-bold" style="color:var(--text)">PHP, Laravel</span></div>
-          <div class="flex justify-between py-2" style="border-bottom:1px solid var(--border)"><span style="color:var(--muted)"><i class="fa-brands fa-react mr-2" style="color:var(--c)"></i>Frontend</span><span class="font-bold" style="color:var(--text)">TypeScript, React</span></div>
-          <div class="flex justify-between py-2" style="border-bottom:1px solid var(--border)"><span style="color:var(--muted)"><i class="fa-solid fa-database mr-2" style="color:var(--p)"></i>Database</span><span class="font-bold" style="color:var(--text)">MySQL, Postgres</span></div>
-          <div class="flex justify-between py-2" style="border-bottom:1px solid var(--border)"><span style="color:var(--muted)"><i class="fa-brands fa-github mr-2" style="color:var(--c)"></i>DevOps</span><span class="font-bold" style="color:var(--text)">Actions, Docker</span></div>
-          <div class="flex justify-between py-2"><span style="color:var(--muted)"><i class="fa-solid fa-server mr-2" style="color:var(--p)"></i>Hosting</span><span class="font-bold" style="color:var(--text)">Vercel, VPS</span></div>
-        </div>
-      </div>
-      <!-- Stats -->
-      <div class="glass rounded-3xl p-6 md:p-8 md:col-span-3 rev d2" style="border:1px solid var(--border)">
-        <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 text-center">
-          <div><p class="font-black" style="font-size:2.5rem;color:var(--text)" data-count="50" data-suffix="+">0+</p><p style="font-size:9px;font-weight:900;text-transform:uppercase;letter-spacing:.15em;color:var(--muted)"><i class="fa-solid fa-rocket mr-1" style="color:var(--p)"></i>Projects</p></div>
-          <div style="border-left:1px solid var(--border)"><p class="font-black" style="font-size:2.5rem;color:var(--text)" data-count="8" data-suffix="+">0+</p><p style="font-size:9px;font-weight:900;text-transform:uppercase;letter-spacing:.15em;color:var(--muted)"><i class="fa-solid fa-calendar mr-1" style="color:var(--c)"></i>Years</p></div>
-          <div style="border-left:1px solid var(--border)"><p class="font-black" style="font-size:2.5rem;color:var(--text)" data-count="15" data-suffix="+">0+</p><p style="font-size:9px;font-weight:900;text-transform:uppercase;letter-spacing:.15em;color:var(--muted)"><i class="fa-solid fa-building mr-1" style="color:var(--p)"></i>Clients</p></div>
-          <div style="border-left:1px solid var(--border)"><p class="font-black" style="font-size:2.5rem;color:var(--text)" data-count="99" data-suffix="%">0%</p><p style="font-size:9px;font-weight:900;text-transform:uppercase;letter-spacing:.15em;color:var(--muted)"><i class="fa-solid fa-shield mr-1" style="color:var(--c)"></i>Uptime</p></div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ══════════════ SKILLS ══════════════ -->
-<section id="skills" class="sec" style="background:rgba(0,0,0,.15);z-index:1;position:relative">
-  <div class="max-w-7xl mx-auto">
-    <div class="rev mb-10">
-      <p class="sec-lbl mb-1"><i class="fa-solid fa-chart-bar mr-2"></i>02 — Skills</p>
-      <h2 class="sec-h">Technical Proficiency</h2>
-      <div class="sec-line"></div>
-    </div>
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-      <div class="glass proj rounded-3xl p-6 md:p-8 rev" style="border:1px solid var(--border)">
-        <h3 class="font-black text-base mb-6 flex items-center gap-2" style="color:var(--text)"><span class="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0" style="background:rgba(139,92,246,.12);border:1px solid rgba(139,92,246,.25)"><i class="fa-solid fa-server" style="color:var(--p);font-size:12px"></i></span>Backend & Database</h3>
-        <div class="space-y-4">
-          <div><div class="flex justify-between mb-1"><span class="text-sm font-bold" style="color:var(--text)"><i class="fa-brands fa-php mr-1" style="color:var(--p)"></i>PHP / Laravel</span><span class="text-sm font-black" style="color:var(--p)">90%</span></div><div class="bar-t"><div class="bar-f" data-w="90"></div></div></div>
-          <div><div class="flex justify-between mb-1"><span class="text-sm font-bold" style="color:var(--text)"><i class="fa-solid fa-database mr-1" style="color:var(--c)"></i>MySQL / PostgreSQL</span><span class="text-sm font-black" style="color:var(--p)">85%</span></div><div class="bar-t"><div class="bar-f" data-w="85"></div></div></div>
-          <div><div class="flex justify-between mb-1"><span class="text-sm font-bold" style="color:var(--text)"><i class="fa-solid fa-plug mr-1" style="color:var(--p)"></i>REST API Design</span><span class="text-sm font-black" style="color:var(--p)">88%</span></div><div class="bar-t"><div class="bar-f" data-w="88"></div></div></div>
-          <div><div class="flex justify-between mb-1"><span class="text-sm font-bold" style="color:var(--text)"><i class="fa-solid fa-sitemap mr-1" style="color:var(--c)"></i>System Architecture</span><span class="text-sm font-black" style="color:var(--p)">92%</span></div><div class="bar-t"><div class="bar-f" data-w="92"></div></div></div>
-        </div>
-      </div>
-      <div class="glass proj rounded-3xl p-6 md:p-8 rev d1" style="border:1px solid var(--border)">
-        <h3 class="font-black text-base mb-6 flex items-center gap-2" style="color:var(--text)"><span class="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0" style="background:rgba(6,182,212,.1);border:1px solid rgba(6,182,212,.25)"><i class="fa-solid fa-globe" style="color:var(--c);font-size:12px"></i></span>Frontend & DevOps</h3>
-        <div class="space-y-4">
-          <div><div class="flex justify-between mb-1"><span class="text-sm font-bold" style="color:var(--text)"><i class="fa-brands fa-react mr-1" style="color:var(--c)"></i>TypeScript / React</span><span class="text-sm font-black" style="color:var(--p)">82%</span></div><div class="bar-t"><div class="bar-f" data-w="82"></div></div></div>
-          <div><div class="flex justify-between mb-1"><span class="text-sm font-bold" style="color:var(--text)"><i class="fa-brands fa-github mr-1" style="color:var(--p)"></i>CI/CD GitHub Actions</span><span class="text-sm font-black" style="color:var(--p)">78%</span></div><div class="bar-t"><div class="bar-f" data-w="78"></div></div></div>
-          <div><div class="flex justify-between mb-1"><span class="text-sm font-bold" style="color:var(--text)"><i class="fa-brands fa-docker mr-1" style="color:var(--c)"></i>Docker / Linux</span><span class="text-sm font-black" style="color:var(--p)">70%</span></div><div class="bar-t"><div class="bar-f" data-w="70"></div></div></div>
-          <div><div class="flex justify-between mb-1"><span class="text-sm font-bold" style="color:var(--text)"><i class="fa-brands fa-git-alt mr-1" style="color:var(--p)"></i>Git Workflow</span><span class="text-sm font-black" style="color:var(--p)">88%</span></div><div class="bar-t"><div class="bar-f" data-w="88"></div></div></div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ══════════════ SERVICES ══════════════ -->
-<section id="services" class="sec" style="z-index:1;position:relative">
-  <div class="max-w-7xl mx-auto">
-    <div class="text-center rev mb-10">
-      <p class="sec-lbl mb-1"><i class="fa-solid fa-briefcase mr-2"></i>03 — Services</p>
-      <h2 class="sec-h">What I Build</h2>
-      <div class="sec-line mx-auto"></div>
-      <p class="mt-4 text-sm md:text-base" style="color:var(--muted);max-width:480px;margin-left:auto;margin-right:auto">Enterprise solutions built with clean architecture and automated pipelines.</p>
-    </div>
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-      <div class="glass proj rounded-3xl p-6 rev" style="border:1px solid var(--border)"><div class="w-12 h-12 rounded-2xl flex items-center justify-center mb-4" style="background:rgba(139,92,246,.1);border:1px solid rgba(139,92,246,.2)"><i class="fa-solid fa-building text-xl" style="color:var(--p)"></i></div><h3 class="font-black text-sm mb-2 uppercase tracking-wide" style="color:var(--text)">SaaS Platforms</h3><p class="text-xs leading-relaxed" style="color:var(--muted)">Multi-tenant SaaS with subscription billing, RBAC, automated invoicing and real-time dashboards.</p></div>
-      <div class="glass proj rounded-3xl p-6 rev d1" style="border:1px solid var(--border)"><div class="w-12 h-12 rounded-2xl flex items-center justify-center mb-4" style="background:rgba(6,182,212,.08);border:1px solid rgba(6,182,212,.2)"><i class="fa-solid fa-cash-register text-xl" style="color:var(--c)"></i></div><h3 class="font-black text-sm mb-2 uppercase tracking-wide" style="color:var(--text)">POS Systems</h3><p class="text-xs leading-relaxed" style="color:var(--muted)">Custom point-of-sale for restaurants & retail — orders, billing, inventory and live reporting.</p></div>
-      <div class="glass proj rounded-3xl p-6 rev d2" style="border:1px solid var(--border)"><div class="w-12 h-12 rounded-2xl flex items-center justify-center mb-4" style="background:rgba(139,92,246,.1);border:1px solid rgba(139,92,246,.2)"><i class="fa-brands fa-github text-xl" style="color:var(--p)"></i></div><h3 class="font-black text-sm mb-2 uppercase tracking-wide" style="color:var(--text)">CI/CD Automation</h3><p class="text-xs leading-relaxed" style="color:var(--muted)">GitHub Actions pipelines, automated testing, security audits and deployment workflows.</p></div>
-      <div class="glass proj rounded-3xl p-6 rev d1" style="border:1px solid var(--border)"><div class="w-12 h-12 rounded-2xl flex items-center justify-center mb-4" style="background:rgba(6,182,212,.08);border:1px solid rgba(6,182,212,.2)"><i class="fa-solid fa-cart-shopping text-xl" style="color:var(--c)"></i></div><h3 class="font-black text-sm mb-2 uppercase tracking-wide" style="color:var(--text)">E-Commerce</h3><p class="text-xs leading-relaxed" style="color:var(--muted)">Modern storefronts with TypeScript & React — catalog, cart, orders and payment integration.</p></div>
-      <div class="glass proj rounded-3xl p-6 rev d2" style="border:1px solid var(--border)"><div class="w-12 h-12 rounded-2xl flex items-center justify-center mb-4" style="background:rgba(139,92,246,.1);border:1px solid rgba(139,92,246,.2)"><i class="fa-solid fa-database text-xl" style="color:var(--p)"></i></div><h3 class="font-black text-sm mb-2 uppercase tracking-wide" style="color:var(--text)">Database Design</h3><p class="text-xs leading-relaxed" style="color:var(--muted)">Optimized MySQL & PostgreSQL schemas, query tuning, migrations and data integrity.</p></div>
-      <div class="glass proj rounded-3xl p-6 rev d3" style="border:1px solid var(--border)"><div class="w-12 h-12 rounded-2xl flex items-center justify-center mb-4" style="background:rgba(6,182,212,.08);border:1px solid rgba(6,182,212,.2)"><i class="fa-solid fa-hospital text-xl" style="color:var(--c)"></i></div><h3 class="font-black text-sm mb-2 uppercase tracking-wide" style="color:var(--text)">Management Systems</h3><p class="text-xs leading-relaxed" style="color:var(--muted)">Hospital, property & business systems with full operational control and automation.</p></div>
-    </div>
-  </div>
-</section>
-
-<!-- ══════════════ PROJECTS ══════════════ -->
-<section id="work" class="sec relative" style="background:rgba(0,0,0,.12);z-index:1">
-  <div class="absolute inset-0 grid-bg opacity-15"></div>
-  <div class="max-w-7xl mx-auto relative z-10">
-    <div class="text-center rev mb-10">
-      <p class="sec-lbl mb-1"><i class="fa-solid fa-code mr-2"></i>04 — Work</p>
-      <h2 class="sec-h">Featured Projects</h2>
-      <div class="sec-line mx-auto"></div>
-    </div>
-
-    <!-- Big card -->
-    <div class="glass proj rounded-3xl overflow-hidden mb-6 rev" style="border:1px solid var(--border)">
-      <div class="flex flex-col lg:grid lg:grid-cols-2">
-        <div class="relative overflow-hidden" style="height:260px;min-height:200px">
-          <img src="assets/property_management_mockup.png" class="w-full h-full object-cover" style="transition:transform .8s ease,filter .5s;filter:brightness(.75) saturate(.9)" onmouseover="this.style.transform='scale(1.06)';this.style.filter='brightness(.9) saturate(1)'" onmouseout="this.style.transform='scale(1)';this.style.filter='brightness(.75) saturate(.9)'" alt="Property Management SaaS"/>
-          <div class="absolute inset-0" style="background:linear-gradient(135deg,rgba(139,92,246,.3) 0%,transparent 60%)"></div>
-          <span class="absolute top-4 left-4 btn-p" style="font-size:9px;padding:6px 14px;border-radius:8px"><i class="fa-solid fa-star mr-1"></i>Featured</span>
-        </div>
-        <div class="p-6 md:p-10 flex flex-col justify-center">
-          <div class="flex items-center gap-3 mb-4">
-            <div class="w-11 h-11 rounded-2xl flex items-center justify-center flex-shrink-0" style="background:rgba(139,92,246,.12);border:1px solid rgba(139,92,246,.25)"><i class="fa-solid fa-building" style="color:var(--p)"></i></div>
-            <div><h3 class="font-black text-lg" style="color:var(--text)">Property Management SaaS</h3><p style="font-size:11px;color:var(--p);font-weight:700">Enterprise Real Estate Platform</p></div>
+        <div class="featured-project reveal">
+          <div class="project-image featured-image">
+            <img src="assets/property_management_mockup.png" alt="Property Management System interface" width="1024" height="1024" loading="lazy">
+            <span class="project-number">01</span>
           </div>
-          <p class="text-sm leading-relaxed mb-5" style="color:var(--muted)">Full-cycle property management — tenant lifecycle, lease tracking, automated invoicing, expense monitoring, and real-time financial reporting with CI/CD pipelines.</p>
-          <div class="flex flex-wrap gap-1.5 mb-5"><span class="tag"><i class="fa-brands fa-php mr-1"></i>PHP</span><span class="tag"><i class="fa-solid fa-database mr-1"></i>MySQL</span><span class="tag">MVC</span><span class="tag"><i class="fa-brands fa-github mr-1"></i>CI/CD</span></div>
-          <a href="https://github.com/Abdullahi0720006477/Property-Management-System-SaaS" target="_blank" class="btn-p" style="font-size:10px;padding:10px 20px;align-self:flex-start"><i class="fa-brands fa-github"></i>View on GitHub</a>
+          <div class="project-content">
+            <p class="project-type">Featured system / Property technology</p>
+            <h3>Property Management SaaS</h3>
+            <p>A multi-role platform for managing tenants, leases, payments, maintenance and financial reporting from one operational dashboard.</p>
+            <ul class="tag-list"><li>PHP</li><li>MySQL</li><li>MVC</li><li>CI/CD</li></ul>
+            <a class="project-link" href="https://github.com/Abdullahi0720006477/Property-Management-System-SaaS" target="_blank" rel="noreferrer">View repository <span aria-hidden="true">↗</span></a>
+          </div>
+        </div>
+
+        <div class="project-grid">
+          <article class="project-card reveal">
+            <div class="project-image"><img src="assets/anfac_pos.jpg" alt="Restaurant POS system interface" width="1024" height="1024" loading="lazy"><span class="project-number">02</span></div>
+            <div class="project-card-body"><p class="project-type">Business operations</p><h3>Muratina Cafe POS</h3><p>Point-of-sale workflows for orders, billing, inventory and daily reporting.</p><ul class="tag-list"><li>PHP</li><li>MySQL</li><li>POS</li></ul><a class="project-link" href="https://github.com/Abdullahi0720006477/Muratina-Cafe-POS" target="_blank" rel="noreferrer">View repository <span aria-hidden="true">↗</span></a></div>
+          </article>
+
+          <article class="project-card reveal reveal-delay">
+            <div class="project-image"><img src="assets/school_management_mockup.png" alt="Hospital management system interface" width="1024" height="1024" loading="lazy"><span class="project-number">03</span></div>
+            <div class="project-card-body"><p class="project-type">Healthcare operations</p><h3>Hospital Management System</h3><p>A Symfony application for patient, appointment, doctor and administrative workflows.</p><ul class="tag-list"><li>Symfony</li><li>Twig</li><li>MySQL</li></ul><a class="project-link" href="https://github.com/Abdullahi0720006477/Hospital-Management-System" target="_blank" rel="noreferrer">View repository <span aria-hidden="true">↗</span></a></div>
+          </article>
+
+          <article class="project-card reveal">
+            <div class="project-image project-image-graphic"><span class="graphic-symbol">HF</span><span class="project-number">04</span></div>
+            <div class="project-card-body"><p class="project-type">Commerce experience</p><h3>Hallo Fresh Grocery</h3><p>A responsive grocery shopping experience with catalogue, cart and order flows.</p><ul class="tag-list"><li>React</li><li>TypeScript</li><li>Vite</li></ul><a class="project-link" href="https://github.com/Abdullahi0720006477/Hallo-Fresh-Grocery" target="_blank" rel="noreferrer">View repository <span aria-hidden="true">↗</span></a></div>
+          </article>
+
+          <article class="project-card reveal reveal-delay">
+            <div class="project-image project-image-graphic graphic-purple"><span class="graphic-symbol">AI</span><span class="project-number">05</span></div>
+            <div class="project-card-body"><p class="project-type">Artificial intelligence</p><h3>AI Partner Groq</h3><p>An AI assistant experiment focused on conversational workflows and practical automation.</p><ul class="tag-list"><li>AI API</li><li>JavaScript</li><li>Agents</li></ul><a class="project-link" href="https://github.com/Abdullahi0720006477/ai-partner-groq" target="_blank" rel="noreferrer">View repository <span aria-hidden="true">↗</span></a></div>
+          </article>
         </div>
       </div>
-    </div>
+    </section>
 
-    <!-- Row 2: 3 cards -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 mb-5">
-      <div class="glass proj rounded-3xl overflow-hidden rev" style="border:1px solid var(--border)">
-        <div class="relative overflow-hidden" style="height:180px"><img src="assets/anfac_pos.jpg" class="w-full h-full object-cover" style="transition:transform .8s,filter .5s;filter:brightness(.7)" onmouseover="this.style.transform='scale(1.06)';this.style.filter='brightness(.85)'" onmouseout="this.style.transform='scale(1)';this.style.filter='brightness(.7)'" alt="Restaurant POS"/><div class="absolute inset-0" style="background:linear-gradient(to top,var(--bg) 0%,transparent 60%)"></div><span class="absolute top-3 left-3 tag"><i class="fa-solid fa-cash-register mr-1" style="color:var(--c)"></i>POS</span></div>
-        <div class="p-5"><div class="flex items-start justify-between mb-2"><h3 class="font-black text-sm" style="color:var(--text)">Restaurant POS System</h3><a href="https://github.com/Abdullahi0720006477/Restaurant-POS-System" target="_blank" style="color:var(--muted)"><i class="fa-solid fa-arrow-up-right-from-square text-xs"></i></a></div><p class="text-xs leading-relaxed mb-3" style="color:var(--muted)">Order management, billing & inventory for high-volume restaurants.</p><div class="flex flex-wrap gap-1"><span class="tag"><i class="fa-brands fa-php mr-1"></i>PHP</span><span class="tag"><i class="fa-solid fa-database mr-1"></i>MySQL</span></div></div>
-      </div>
-      <div class="glass proj rounded-3xl overflow-hidden rev d1" style="border:1px solid var(--border)">
-        <div class="relative overflow-hidden" style="height:180px"><img src="assets/coffee_pos_mockup.png" class="w-full h-full object-cover" style="transition:transform .8s,filter .5s;filter:brightness(.7)" onmouseover="this.style.transform='scale(1.06)';this.style.filter='brightness(.85)'" onmouseout="this.style.transform='scale(1)';this.style.filter='brightness(.7)'" alt="Coffee POS"/><div class="absolute inset-0" style="background:linear-gradient(to top,var(--bg) 0%,transparent 60%)"></div><span class="absolute top-3 left-3 tag"><i class="fa-solid fa-mug-hot mr-1" style="color:var(--p)"></i>FinTech</span></div>
-        <div class="p-5"><div class="flex items-start justify-between mb-2"><h3 class="font-black text-sm" style="color:var(--text)">ANFAC Coffee House POS</h3><a href="https://github.com/Abdullahi0720006477" target="_blank" style="color:var(--muted)"><i class="fa-solid fa-arrow-up-right-from-square text-xs"></i></a></div><p class="text-xs leading-relaxed mb-3" style="color:var(--muted)">FinTech POS with loyalty features for coffee retailers.</p><div class="flex flex-wrap gap-1"><span class="tag"><i class="fa-brands fa-laravel mr-1"></i>Laravel</span><span class="tag"><i class="fa-solid fa-database mr-1"></i>MySQL</span></div></div>
-      </div>
-      <div class="glass proj rounded-3xl overflow-hidden rev d2 sm:col-span-2 lg:col-span-1" style="border:1px solid var(--border)">
-        <div class="relative overflow-hidden" style="height:180px"><img src="assets/school_management_mockup.png" class="w-full h-full object-cover" style="transition:transform .8s,filter .5s;filter:brightness(.7)" onmouseover="this.style.transform='scale(1.06)';this.style.filter='brightness(.85)'" onmouseout="this.style.transform='scale(1)';this.style.filter='brightness(.7)'" alt="Hospital Management"/><div class="absolute inset-0" style="background:linear-gradient(to top,var(--bg) 0%,transparent 60%)"></div><span class="absolute top-3 left-3 tag"><i class="fa-solid fa-hospital mr-1" style="color:var(--c)"></i>Healthcare</span></div>
-        <div class="p-5"><div class="flex items-start justify-between mb-2"><h3 class="font-black text-sm" style="color:var(--text)">Hospital Management System</h3><a href="https://github.com/Abdullahi0720006477/Hospital-Management-System" target="_blank" style="color:var(--muted)"><i class="fa-solid fa-arrow-up-right-from-square text-xs"></i></a></div><p class="text-xs leading-relaxed mb-3" style="color:var(--muted)">Patient records, appointments & staff management with CI/CD.</p><div class="flex flex-wrap gap-1"><span class="tag"><i class="fa-brands fa-php mr-1"></i>PHP</span><span class="tag">Twig</span></div></div>
-      </div>
-    </div>
-
-    <!-- Row 3: 2 cards -->
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-      <div class="glass proj rounded-3xl overflow-hidden rev" style="border:1px solid var(--border)">
-        <div class="flex flex-col sm:flex-row">
-          <div class="flex items-center justify-center sm:w-40 flex-shrink-0" style="height:140px;background:linear-gradient(135deg,rgba(6,182,212,.15),rgba(139,92,246,.1))"><i class="fa-solid fa-basket-shopping" style="font-size:3rem;color:var(--c);opacity:.6"></i></div>
-          <div class="p-5"><div class="flex items-start justify-between mb-2"><h3 class="font-black text-sm" style="color:var(--text)">Hallo Fresh Grocery</h3><a href="https://github.com/Abdullahi0720006477/Hallo-Fresh-Grocery" target="_blank" style="color:var(--muted)"><i class="fa-solid fa-arrow-up-right-from-square text-xs"></i></a></div><p class="text-xs leading-relaxed mb-3" style="color:var(--muted)">Grocery delivery platform — catalog, cart & order tracking.</p><div class="flex flex-wrap gap-1"><span class="tag"><i class="fa-brands fa-react mr-1"></i>React</span><span class="tag"><i class="fa-brands fa-js mr-1"></i>TypeScript</span></div></div>
+    <section class="section" id="skills">
+      <div class="shell skills-grid">
+        <div class="section-heading reveal">
+          <p class="kicker">03 / Capabilities</p>
+          <h2>A practical toolkit for modern product development.</h2>
+          <p class="section-note">I choose tools based on the problem, then keep the product understandable and maintainable.</p>
+        </div>
+        <div class="capability-list reveal reveal-delay">
+          <article><span>01</span><div><h3>Full-stack web development</h3><p>Responsive interfaces, backend workflows, authentication, APIs and database-backed products.</p><ul class="tag-list"><li>React</li><li>PHP</li><li>Laravel</li><li>Symfony</li></ul></div></article>
+          <article><span>02</span><div><h3>Business systems</h3><p>Operational software for property, retail, hospitality, healthcare and education contexts.</p><ul class="tag-list"><li>MySQL</li><li>RBAC</li><li>Reporting</li><li>Workflows</li></ul></div></article>
+          <article><span>03</span><div><h3>AI and automation</h3><p>Secure AI API integrations, agent experiments and workflow automation that support real tasks.</p><ul class="tag-list"><li>Gemini</li><li>Groq</li><li>Prompt design</li><li>Agents</li></ul></div></article>
+          <article><span>04</span><div><h3>Delivery and quality</h3><p>Git workflows, automated checks, dependency auditing and deployment-ready documentation.</p><ul class="tag-list"><li>GitHub</li><li>CI/CD</li><li>Testing</li><li>Vercel</li></ul></div></article>
         </div>
       </div>
-      <div class="glass proj rounded-3xl overflow-hidden rev d1" style="border:1px solid var(--border)">
-        <div class="flex flex-col sm:flex-row">
-          <div class="flex items-center justify-center sm:w-40 flex-shrink-0" style="height:140px;background:linear-gradient(135deg,rgba(139,92,246,.15),rgba(6,182,212,.1))"><i class="fa-solid fa-microchip" style="font-size:3rem;color:var(--p);opacity:.6"></i></div>
-          <div class="p-5"><div class="flex items-start justify-between mb-2"><h3 class="font-black text-sm" style="color:var(--text)">Marso Electronics</h3><a href="https://github.com/Abdullahi0720006477/Marso-Electronics" target="_blank" style="color:var(--muted)"><i class="fa-solid fa-arrow-up-right-from-square text-xs"></i></a></div><p class="text-xs leading-relaxed mb-3" style="color:var(--muted)">E-commerce for electronics — listings, cart & checkout.</p><div class="flex flex-wrap gap-1"><span class="tag"><i class="fa-brands fa-react mr-1"></i>React</span><span class="tag"><i class="fa-brands fa-js mr-1"></i>TypeScript</span></div></div>
+    </section>
+
+    <section class="section journey-section">
+      <div class="shell journey-card reveal">
+        <div><p class="kicker">04 / Current chapter</p><h2>Learning, building and preparing for the next opportunity.</h2></div>
+        <div class="journey-copy">
+          <p>I’m completing a Bachelor of Business and Information Technology at Mount Kenya University while developing a portfolio of practical software systems.</p>
+          <p>My next goal is to contribute through an internship or junior development role where I can learn from a strong team and ship useful work.</p>
+          <a class="text-link" href="#contact">Let’s connect <span aria-hidden="true">→</span></a>
         </div>
       </div>
-    </div>
+    </section>
 
-    <div class="flex justify-center mt-8 rev">
-      <a href="https://github.com/Abdullahi0720006477" target="_blank" class="btn-g mag-btn"><i class="fa-brands fa-github"></i>View All on GitHub</a>
-    </div>
-  </div>
-</section>
-
-<!-- ══════════════ JOURNEY ══════════════ -->
-<section id="journey" class="sec" style="z-index:1;position:relative">
-  <div class="max-w-3xl mx-auto">
-    <div class="text-center rev mb-10">
-      <p class="sec-lbl mb-1"><i class="fa-solid fa-timeline mr-2"></i>05 — Journey</p>
-      <h2 class="sec-h">My Journey</h2>
-      <div class="sec-line mx-auto"></div>
-    </div>
-    <div class="relative space-y-12" style="border-left:2px solid var(--border);margin-left:1rem">
-      <div class="relative pl-8 rev">
-        <span class="absolute -left-[11px] top-1.5 w-5 h-5 rounded-full" style="background:var(--p);border:3px solid var(--bg);box-shadow:0 0 18px rgba(139,92,246,.7)"></span>
-        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-2">
-          <h3 class="font-black text-lg" style="color:var(--text)"><i class="fa-solid fa-crown mr-2" style="color:var(--p)"></i>Senior Systems Architect</h3>
-          <span class="tag mt-2 sm:mt-0 w-fit" style="color:var(--p);border-color:rgba(139,92,246,.3)">2021 – Present</span>
+    <section class="section contact-section" id="contact">
+      <div class="shell contact-grid">
+        <div class="reveal">
+          <p class="kicker">05 / Contact</p>
+          <h2>Have an opportunity or a problem worth solving?</h2>
         </div>
-        <p class="font-bold text-sm mb-1" style="color:var(--p)">Enterprise SaaS & Systems</p>
-        <p class="text-sm leading-relaxed" style="color:var(--muted)">Designing enterprise SaaS — Property Management, Hospital Systems, POS — with full CI/CD, MVC architecture and automated deployments.</p>
-      </div>
-      <div class="relative pl-8 rev d1">
-        <span class="absolute -left-[11px] top-1.5 w-5 h-5 rounded-full" style="background:var(--surface);border:3px solid var(--border)"></span>
-        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-2">
-          <h3 class="font-black text-lg" style="color:var(--text)"><i class="fa-solid fa-code mr-2" style="color:var(--muted)"></i>Full-Stack Developer</h3>
-          <span class="tag mt-2 sm:mt-0 w-fit">2018 – 2021</span>
-        </div>
-        <p class="font-bold text-sm mb-1" style="color:var(--muted)">Digital Agency & Freelance</p>
-        <p class="text-sm leading-relaxed" style="color:var(--muted)">Built custom web apps in e-commerce, logistics, and healthcare. Optimized queries improving performance by 40%.</p>
-      </div>
-      <div class="relative pl-8 rev d2">
-        <span class="absolute -left-[11px] top-1.5 w-5 h-5 rounded-full" style="background:var(--surface);border:3px solid var(--border)"></span>
-        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-2">
-          <h3 class="font-black text-lg" style="color:var(--text)"><i class="fa-solid fa-seedling mr-2" style="color:var(--muted)"></i>Junior Web Developer</h3>
-          <span class="tag mt-2 sm:mt-0 w-fit">2016 – 2018</span>
-        </div>
-        <p class="font-bold text-sm mb-1" style="color:var(--muted)">Freelance & Contract</p>
-        <p class="text-sm leading-relaxed" style="color:var(--muted)">Built responsive websites and e-commerce stores for local businesses, laying the foundation in PHP, HTML, CSS, and JavaScript.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ══════════════ CONTACT ══════════════ -->
-<footer id="contact" class="sec relative" style="border-top:1px solid var(--border);background:rgba(0,0,0,.2);z-index:1">
-  <div class="absolute inset-0 grid-bg opacity-10"></div>
-  <div class="max-w-3xl mx-auto text-center flex flex-col items-center relative z-10">
-    <p class="sec-lbl mb-4 rev"><i class="fa-solid fa-envelope mr-2"></i>06 — Contact</p>
-    <h2 class="font-black leading-tight mb-5 rev d1" style="font-size:clamp(1.8rem,5vw,3.5rem);color:var(--text)">Let's Build<br/><span class="grad">Something Great</span></h2>
-    <p class="text-sm md:text-base leading-relaxed mb-10 rev d2" style="color:var(--muted);max-width:440px">Have a SaaS product, enterprise system, or complex project? Let's make it happen.</p>
-
-    <!-- CTA Buttons -->
-    <div class="flex flex-wrap gap-3 justify-center mb-10 rev d3">
-      <a href="https://wa.me/254710997587" target="_blank" class="btn-p mag-btn" style="background:linear-gradient(135deg,#25d366,#128c3e);box-shadow:0 0 28px rgba(37,211,102,.4)"><i class="fa-brands fa-whatsapp"></i>WhatsApp Me</a>
-      <a href="mailto:hello@abdullahimukhtar.com" class="btn-g mag-btn"><i class="fa-solid fa-envelope"></i>Send Email</a>
-      <a href="https://www.linkedin.com/in/abdullahi-deeer-562aa530b" target="_blank" class="btn-g mag-btn"><i class="fa-brands fa-linkedin"></i>LinkedIn</a>
-    </div>
-
-    <!-- WhatsApp QR Card -->
-    <div class="glass proj rounded-3xl p-6 mb-10 rev d3" style="border:1px solid rgba(37,211,102,.25);max-width:320px;width:100%">
-      <div class="flex items-center gap-3 mb-5 justify-center">
-        <div class="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0" style="background:rgba(37,211,102,.12);border:1px solid rgba(37,211,102,.3)">
-          <i class="fa-brands fa-whatsapp text-xl" style="color:#25d366"></i>
-        </div>
-        <div class="text-left">
-          <p class="font-black text-sm" style="color:var(--text)">WhatsApp</p>
-          <p style="font-size:11px;color:#25d366;font-weight:700">+254 710 997 587</p>
+        <div class="contact-panel reveal reveal-delay">
+          <p>I’m open to internships, junior roles, collaborations and focused software projects.</p>
+          <a class="contact-line" href="mailto:hello@abdullahimukhtar.com"><span>Email</span><strong>hello@abdullahimukhtar.com</strong><b aria-hidden="true">↗</b></a>
+          <a class="contact-line" href="https://wa.me/254710997587" target="_blank" rel="noreferrer"><span>WhatsApp</span><strong>Start a conversation</strong><b aria-hidden="true">↗</b></a>
+          <a class="contact-line" href="https://www.linkedin.com/in/abdullahi-deeer-562aa530b" target="_blank" rel="noreferrer"><span>LinkedIn</span><strong>View my profile</strong><b aria-hidden="true">↗</b></a>
+          <a class="contact-line" href="https://github.com/Abdullahi0720006477" target="_blank" rel="noreferrer"><span>GitHub</span><strong>Explore my code</strong><b aria-hidden="true">↗</b></a>
         </div>
       </div>
-      <!-- QR Code — scan to open WhatsApp chat -->
-      <div class="flex justify-center mb-4">
-        <div class="rounded-2xl overflow-hidden p-2 bg-white" style="width:180px;height:180px;box-shadow:0 4px 24px rgba(0,0,0,.2)">
-          <img src="https://api.qrserver.com/v1/create-qr-code/?size=160x160&margin=4&data=https://wa.me/254710997587" width="160" height="160" alt="WhatsApp QR Code" style="display:block;border-radius:8px"/>
-        </div>
-      </div>
-      <p style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.18em;color:var(--muted)"><i class="fa-solid fa-camera mr-1"></i>Scan to chat on WhatsApp</p>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="shell footer-wrap">
+      <p>© 2026 Abdullahi Mukhtar</p>
+      <p>Designed with purpose. Built with care.</p>
+      <a href="#top">Back to top ↑</a>
     </div>
-
-    <!-- Social icon row -->
-    <div class="flex gap-4 mb-12 rev d4">
-      <a href="https://wa.me/254710997587" target="_blank" class="glass proj rounded-2xl p-4 flex flex-col items-center gap-2" style="border:1px solid rgba(37,211,102,.25);min-width:72px"><i class="fa-brands fa-whatsapp text-2xl" style="color:#25d366"></i><span style="font-size:9px;font-weight:900;text-transform:uppercase;letter-spacing:.12em;color:var(--muted)">WhatsApp</span></a>
-      <a href="https://github.com/Abdullahi0720006477" target="_blank" class="glass proj rounded-2xl p-4 flex flex-col items-center gap-2" style="border:1px solid var(--border);min-width:72px"><i class="fa-brands fa-github text-2xl" style="color:var(--text)"></i><span style="font-size:9px;font-weight:900;text-transform:uppercase;letter-spacing:.12em;color:var(--muted)">GitHub</span></a>
-      <a href="https://www.linkedin.com/in/abdullahi-deeer-562aa530b" target="_blank" class="glass proj rounded-2xl p-4 flex flex-col items-center gap-2" style="border:1px solid var(--border);min-width:72px"><i class="fa-brands fa-linkedin text-2xl" style="color:var(--text)"></i><span style="font-size:9px;font-weight:900;text-transform:uppercase;letter-spacing:.12em;color:var(--muted)">LinkedIn</span></a>
-      <a href="https://personal-portfolio-v1-three.vercel.app/" class="glass proj rounded-2xl p-4 flex flex-col items-center gap-2" style="border:1px solid var(--border);min-width:72px"><i class="fa-solid fa-globe text-2xl" style="color:var(--text)"></i><span style="font-size:9px;font-weight:900;text-transform:uppercase;letter-spacing:.12em;color:var(--muted)">Portfolio</span></a>
-    </div>
-    <p style="font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:.4em;color:var(--border)">© 2026 Abdullahidev · All Rights Reserved</p>
-  </div>
-</footer>
-
-<script>
-// ── Canvas particles ──
-const canvas=document.getElementById('bg-canvas'),ctx=canvas.getContext('2d');
-let W,H,pts=[];
-function resize(){W=canvas.width=window.innerWidth;H=canvas.height=window.innerHeight;pts=Array.from({length:60},()=>({x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-.5)*.3,vy:(Math.random()-.5)*.3,r:Math.random()*1.5+.5}))}
-resize();window.addEventListener('resize',resize);
-function drawCanvas(){
-  ctx.clearRect(0,0,W,H);
-  const isDark=!document.documentElement.classList.contains('light');
-  pts.forEach(p=>{
-    p.x+=p.vx;p.y+=p.vy;
-    if(p.x<0||p.x>W)p.vx*=-1;if(p.y<0||p.y>H)p.vy*=-1;
-    ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
-    ctx.fillStyle=isDark?'rgba(139,92,246,.5)':'rgba(139,92,246,.25)';ctx.fill();
-  });
-  pts.forEach((a,i)=>pts.slice(i+1).forEach(b=>{
-    const d=Math.hypot(a.x-b.x,a.y-b.y);
-    if(d<120){ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);ctx.strokeStyle=isDark?`rgba(139,92,246,${.15*(1-d/120)})`:`rgba(139,92,246,${.08*(1-d/120)})`;ctx.lineWidth=.5;ctx.stroke()}
-  }));
-  requestAnimationFrame(drawCanvas);
-}
-drawCanvas();
-
-// ── Theme ──
-function toggleTheme(){document.documentElement.classList.toggle('light');localStorage.setItem('theme',document.documentElement.classList.contains('light')?'light':'dark')}
-if(localStorage.getItem('theme')==='light')document.documentElement.classList.add('light');
-
-// ── Cursor ──
-const C=document.getElementById('C'),CR=document.getElementById('CR');
-let mx=0,my=0,fx=0,fy=0;
-document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;C.style.left=mx+'px';C.style.top=my+'px'});
-(function loop(){fx+=(mx-fx)*.1;fy+=(my-fy)*.1;CR.style.left=fx+'px';CR.style.top=fy+'px';requestAnimationFrame(loop)})();
-document.querySelectorAll('a,button,.proj').forEach(el=>{
-  el.addEventListener('mouseenter',()=>{C.style.transform='translate(-50%,-50%) scale(3)';CR.style.width='50px';CR.style.height='50px';CR.style.opacity='1'});
-  el.addEventListener('mouseleave',()=>{C.style.transform='translate(-50%,-50%) scale(1)';CR.style.width='30px';CR.style.height='30px';CR.style.opacity='.5'});
-});
-
-// ── Typing ──
-const words=['Systems','SaaS Apps','Platforms','APIs','Solutions'];
-let wi=0,ci=0,del=false;const tel=document.getElementById('typed');
-function type(){const w=words[wi];tel.textContent=del?w.slice(0,--ci):w.slice(0,++ci);if(!del&&ci===w.length)setTimeout(()=>del=true,1800);else if(del&&ci===0){del=false;wi=(wi+1)%words.length}setTimeout(type,del?55:100)}
-setTimeout(type,800);
-
-// ── Mobile menu ──
-function toggleMob(){document.getElementById('mob').classList.toggle('open');document.getElementById('mob-ov').classList.toggle('hidden')}
-
-// ── Scroll reveal ──
-const revObs=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('in')}),{threshold:0,rootMargin:'0px 0px 0px 0px'});
-document.querySelectorAll('.rev').forEach(el=>revObs.observe(el));
-// Safety fallback — force-show all .rev elements after 400ms so nothing stays blank
-setTimeout(()=>document.querySelectorAll('.rev').forEach(el=>el.classList.add('in')),400);
-
-// ── Skill bars ──
-const skillObs=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)e.target.querySelectorAll('.bar-f').forEach(b=>b.style.width=b.dataset.w+'%')}),{threshold:.1});
-document.querySelectorAll('#skills').forEach(el=>skillObs.observe(el));
-
-// ── Counters ──
-const cntObs=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)e.target.querySelectorAll('[data-count]').forEach(el=>{const t=+el.dataset.count,s=el.dataset.suffix||'';let c=0;const step=t/60;const id=setInterval(()=>{c=Math.min(c+step,t);el.textContent=Math.floor(c)+s;if(c>=t)clearInterval(id)},22)})}),{threshold:.1});
-document.querySelectorAll('#about').forEach(el=>cntObs.observe(el));
-
-// ── Nav scroll ──
-window.addEventListener('scroll',()=>document.getElementById('nav').classList.toggle('scrolled',window.scrollY>60));
-
-// ── GSAP 3D scroll animations (no opacity — .rev CSS handles fade-in) ──
-gsap.registerPlugin(ScrollTrigger);
-gsap.utils.toArray('.proj').forEach((el,i)=>{
-  gsap.from(el,{scrollTrigger:{trigger:el,start:'top 90%'},y:40,rotationX:10,transformPerspective:800,duration:.8,delay:i*.04,ease:'power3.out'});
-});
-gsap.from('#nav',{y:-80,opacity:0,duration:.8,ease:'power3.out'});
-gsap.from('.orb',{scale:0,opacity:0,duration:2,stagger:.3,ease:'power2.out'});
-
-// ── Vanilla Tilt on profile ──
-const tiltEl=document.getElementById('profile-tilt');
-if(tiltEl&&window.innerWidth>=768){
-  VanillaTilt.init(tiltEl,{max:12,speed:400,glare:true,'max-glare':.15,perspective:800,scale:1.03});
-}
-
-// ── Magnetic buttons ──
-document.querySelectorAll('.mag-btn').forEach(btn=>{
-  btn.addEventListener('mousemove',e=>{
-    const r=btn.getBoundingClientRect(),x=(e.clientX-r.left-r.width/2)*.2,y=(e.clientY-r.top-r.height/2)*.2;
-    btn.style.transform=`translate(${x}px,${y}px)`;
-  });
-  btn.addEventListener('mouseleave',()=>btn.style.transform='');
-});
-</script>
+  </footer>
 </body>
 </html>
