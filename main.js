@@ -54,7 +54,7 @@ const themeColor = document.querySelector('meta[name="theme-color"]');
 const applyTheme = (theme) => {
   root.dataset.theme = theme;
   themeToggle.setAttribute('aria-label', theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme');
-  themeColor.setAttribute('content', theme === 'dark' ? '#07120f' : '#f4f7f1');
+  themeColor.setAttribute('content', theme === 'dark' ? '#0d0e22' : '#ffffff');
 };
 
 applyTheme(root.dataset.theme === 'light' ? 'light' : 'dark');
