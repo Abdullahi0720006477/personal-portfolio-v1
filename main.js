@@ -46,3 +46,60 @@ if (prefersReducedMotion || !('IntersectionObserver' in window)) {
 
   revealItems.forEach((item) => observer.observe(item));
 }
+
+const root = document.documentElement;
+const themeToggle = document.querySelector('.theme-toggle');
+const themeColor = document.querySelector('meta[name="theme-color"]');
+
+const applyTheme = (theme) => {
+  root.dataset.theme = theme;
+  themeToggle.setAttribute('aria-label', theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme');
+  themeColor.setAttribute('content', theme === 'dark' ? '#07120f' : '#f4f7f1');
+};
+
+applyTheme(root.dataset.theme === 'light' ? 'light' : 'dark');
+
+themeToggle.addEventListener('click', () => {
+  const next = root.dataset.theme === 'dark' ? 'light' : 'dark';
+  applyTheme(next);
+  try { localStorage.setItem('theme', next); } catch (error) {}
+});
+
+if (window.matchMedia('(hover: hover)').matches) {
+  document.querySelectorAll('.glow-card').forEach((card) => {
+    card.addEventListener('pointermove', (event) => {
+      const rect = card.getBoundingClientRect();
+      card.style.setProperty('--mx', `${event.clientX - rect.left}px`);
+      card.style.setProperty('--my', `${event.clientY - rect.top}px`);
+    });
+  });
+}
+
+const localTime = document.querySelector('[data-local-time]');
+
+if (localTime) {
+  const formatter = new Intl.DateTimeFormat('en-GB', { hour: '2-digit', minute: '2-digit', timeZone: 'Africa/Nairobi' });
+  const updateTime = () => { localTime.textContent = `${formatter.format(new Date())} local time (EAT)`; };
+  updateTime();
+  setInterval(updateTime, 30000);
+}
+
+const copyStatus = document.querySelector('.copy-status');
+
+document.querySelectorAll('[data-copy]').forEach((button) => {
+  button.addEventListener('click', async () => {
+    try {
+      await navigator.clipboard.writeText(button.dataset.copy);
+      button.textContent = 'Copied';
+      button.classList.add('copied');
+      copyStatus.textContent = 'Email address copied to clipboard.';
+    } catch (error) {
+      copyStatus.textContent = `Copy failed. The address is ${button.dataset.copy}`;
+    }
+    setTimeout(() => {
+      button.textContent = 'Copy';
+      button.classList.remove('copied');
+      copyStatus.textContent = '';
+    }, 2200);
+  });
+});
